@@ -1,0 +1,88 @@
+{
+  "variables": {
+      "template_name": "centos-7-python",
+      "template_os": "RedHat_64",
+
+      "iso_url": "http://mirrors.cat.pdx.edu/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso",
+      "iso_checksum": "d07ab3e615c66a8b2e9a50f4852e6a77",
+      "iso_checksum_type": "md5",
+
+      "headless": "true",
+      "memory_size": "1024",
+      "cpu_count": "1",
+
+      "provisioner": "virtualbox"
+  },
+  "builders": [
+    {
+      "name": "centos-7-python",
+      "type": "virtualbox-iso",
+
+      "guest_os_type": "{{user `template_os`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+
+      "boot_wait": "10s",
+      "disk_size": 20480,
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
+      ],
+
+      "http_directory": "http",
+
+      "ssh_password": "vagrant",
+      "ssh_username": "vagrant",
+      "ssh_wait_timeout": "60m",
+
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory_size`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpu_count`}}"
+        ]
+      ],
+      "shutdown_command": "sudo -S /sbin/halt -h -p"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/packages.sh",
+        "scripts/vagrant.sh",
+        "scripts/virtualbox.sh",
+        "scripts/python.sh",
+        "scripts/cleanup.sh"
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+    }
+  ],
+  "post-processors": [[
+    {
+      "type": "vagrant",
+      "keep_input_artifact": false
+    },
+    {
+      "type": "atlas",
+      "artifact": "zealic/centos-7-python",
+      "artifact_type": "vagrant.box",
+      "metadata": {
+          "created_at": "{{timestamp}}",
+          "provider": "virtualbox",
+          "version": "0.4.0"
+      }
+    }
+  ]],
+  "push": {
+    "name": "zealic/centos-7-python",
+    "exclude": [".*", "*.json", "*.box", "output-*", "packer_cache", "Vagrantfile"]
+  }
+}
