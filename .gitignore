@@ -1,1 +1,5 @@
-/iso
+/packer/packer_cache/
+/packer/output-*/
+/.vagrant/
+/packer/*.box
+Vagrantfile
