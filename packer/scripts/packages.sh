@@ -1,4 +1,9 @@
 #!/bin/bash
+cat > /etc/environment <<EOF
+LANG=en_US.UTF-8
+LC_ALL=en_US.UTF-8
+EOF
+
 # Setup mirror on chinese
 
 sed -i 's|enabled=1|enabled=0|g' /etc/yum/pluginconf.d/fastestmirror.conf
