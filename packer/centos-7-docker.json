@@ -65,7 +65,7 @@
       "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     }
   ],
-  "post-processors": [
+  "post-processors": [[
     {
       "type": "vagrant",
       "keep_input_artifact": false
@@ -75,11 +75,12 @@
       "artifact": "zealic/centos-7-docker",
       "artifact_type": "vagrant.box",
       "metadata": {
+          "created_at": "{{timestamp}}",
           "provider": "virtualbox",
-          "version": "0.2"
+          "version": "0.4.0"
       }
     }
-  ],
+  ]],
   "push": {
     "name": "zealic/centos-7-docker",
     "exclude": [".*", "*.json", "*.box", "output-*", "packer_cache", "Vagrantfile"]
