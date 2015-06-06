@@ -56,11 +56,11 @@
     {
       "type": "shell",
       "scripts": [
-        "scripts\\packages.sh",
-        "scripts\\vagrant.sh",
-        "scripts\\virtualbox.sh",
-        "scripts\\docker.sh",
-        "scripts\\cleanup.sh"
+        "scripts/packages.sh",
+        "scripts/vagrant.sh",
+        "scripts/virtualbox.sh",
+        "scripts/docker.sh",
+        "scripts/cleanup.sh"
       ],
       "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     }
@@ -68,8 +68,16 @@
   "post-processors": [
     {
       "type": "vagrant",
-      "compression_level": 9,
-      "output": "{{user `template_name`}}.box"
+      "keep_input_artifact": false
+    },
+    {
+      "type": "atlas",
+      "artifact": "zealic/centos-7-docker",
+      "artifact_type": "vagrant.box",
+      "metadata": {
+          "provider": "virtualbox",
+          "version": "0.2"
+      }
     }
   ],
   "push": {
