@@ -20,6 +20,20 @@ sed -i 's|#baseurl=http://download.fedoraproject.org/pub|baseurl=http://mirrors.
 sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/epel-testing.repo
 
 # Utils
-yum update -y
-yum install -y gcc make net-tools telnet iftop mtr wget
+PACKAGES=(
+  axel
+  gcc
+  htop
+  make
+  net-tools
+  nload
+  nmap
+  telnet
+  tmux
+  iftop
+  mtr
+  wget
+)
+
+yum install -y ${PACKAGES[@]}
 
