@@ -80,7 +80,7 @@
       "metadata": {
           "created_at": "{{timestamp}}",
           "provider": "virtualbox",
-          "version": "0.1.0"
+          "version": "0.1.1"
       }
     }
   ]],
