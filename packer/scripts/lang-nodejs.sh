@@ -1,3 +1,6 @@
 #!/bin/sh
 yum install -y nodejs npm
-npm install -g bower gulp mocha
+# Update npm to latest version
+npm install -g npm
+npm install -g bower grunt gulp mocha
+
