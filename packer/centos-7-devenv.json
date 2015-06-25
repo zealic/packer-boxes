@@ -60,6 +60,7 @@
         "scripts/vagrant.sh",
         "scripts/virtualbox.sh",
         "scripts/docker.sh",
+        "scripts/lang-golang.sh",
         "scripts/lang-python.sh",
         "scripts/lang-ruby.sh",
         "scripts/lang-nodejs.sh",
