@@ -22,6 +22,12 @@ PACKAGES=(
   postgres
   redis
   microbox/etcd
+
+  # Langugages
+  node
+  python:2.7
+  python:latest
+  ruby
 )
 
 for pkg in ${PACKAGES[@]}
