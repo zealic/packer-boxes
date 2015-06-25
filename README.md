@@ -28,7 +28,8 @@ To build vagrant box, you need:
 **Packages:**
 * VirtualBox Guest Additions
 * [Docker](https://www.docker.com)
-  - [Weave](https://github.com/weaveworks/weave)
+* [Weave](https://github.com/weaveworks/weave)
+* [Go](https://golang.org)
 * [Python](https://www.python.org)
   - pip
   - virtualenv
@@ -36,6 +37,7 @@ To build vagrant box, you need:
 * [Node.js](https://nodejs.org)
   - npm
   - bower
+  - grunt
   - gulp
   - mocha
 * [Ruby](https://www.ruby-lang.org)
