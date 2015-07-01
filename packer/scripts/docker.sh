@@ -1,15 +1,13 @@
 #!/bin/sh
 yum install -y docker
 
-# Set mirror
-sed -i 's|OPTIONS=|OPTIONS=--registry-mirror=https://docker.mirrors.ustc.edu.cn |g' /etc/sysconfig/docker
-
 # Enable docker
 systemctl enable docker
 systemctl start docker
 
 # Install docker
-curl -sSL -o /usr/bin/weave https://github.com/weaveworks/weave/releases/download/v0.11.1/weave
+WEAVE_VERSION=1.0.1
+curl -sSL -o /usr/bin/weave https://github.com/weaveworks/weave/releases/download/v$WEAVE_VERSION/weave
 chmod a+x /usr/bin/weave
 weave setup
 
@@ -35,3 +33,5 @@ do
   docker pull $pkg
 done
 
+# Set mirror
+sed -i 's|OPTIONS=|OPTIONS=--registry-mirror=https://docker.mirrors.ustc.edu.cn |g' /etc/sysconfig/docker
