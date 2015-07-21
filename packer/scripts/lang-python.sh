@@ -8,5 +8,6 @@ cat > /root/.pip/pip.conf <<EOF
 index-url = https://pypi.mirrors.ustc.edu.cn/simple
 EOF
 
-cp /home/vagrant/.pip/pip.conf /home/vagrant/.pip/pip.conf
-chown vagrant:vagrant /home/vagrant/.pip/pip.conf
+mkdir -p /home/vagrant/.pip
+cp /root/.pip/pip.conf /home/vagrant/.pip/pip.conf
+chown -R vagrant:vagrant /home/vagrant/.pip
