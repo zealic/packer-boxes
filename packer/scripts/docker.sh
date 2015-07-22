@@ -1,5 +1,7 @@
 #!/bin/sh
-yum install -y docker
+DOCKER_VERSION=1.7.1
+curl -o /tmp/docker.rpm -sSL https://get.docker.com/rpm/$DOCKER_VERSION/centos-7/RPMS/x86_64/docker-engine-$DOCKER_VERSION-1.el7.centos.x86_64.rpm
+yum localinstall -y --nogpgcheck /tmp/docker.rpm
 
 # Enable docker
 systemctl enable docker
@@ -19,7 +21,6 @@ PACKAGES=(
   nginx
   postgres
   redis
-  microbox/etcd
 
   # Langugages
   node
