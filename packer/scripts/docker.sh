@@ -5,13 +5,13 @@ yum localinstall -y --nogpgcheck /tmp/docker.rpm
 
 # Docker configuration
 mkdir -p /etc/systemd/system/docker.service.d
-cat > /etc/systemd/system/docker.service.d/docker.conf <<EOF
+cat > /etc/systemd/system/docker.service.d/docker.conf <<'EOF'
 [Service]
 EnvironmentFile=-/etc/default/docker
 ExecStart=
 ExecStart=/usr/bin/docker -d -H fd:// $DOCKER_OPTS
 EOF
-cat > /etc/default/docker <<EOF
+cat > /etc/default/docker <<'EOF'
 DOCKER_OPTS="--registry-mirror=https://docker.mirrors.ustc.edu.cn"
 EOF
 
