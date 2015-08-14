@@ -1,5 +1,5 @@
 #!/bin/sh
-DOCKER_VERSION=1.8.0
+DOCKER_VERSION=1.8.1
 curl -o /tmp/docker.rpm -sSL http://yum.dockerproject.org/repo/main/centos/7/Packages/docker-engine-$DOCKER_VERSION-1.el7.centos.x86_64.rpm
 yum localinstall -y --nogpgcheck /tmp/docker.rpm
 
