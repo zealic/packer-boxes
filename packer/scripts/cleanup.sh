@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # Remove Linux headers
 yum -y clean all
 
