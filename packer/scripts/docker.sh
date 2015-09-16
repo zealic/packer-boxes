@@ -1,5 +1,5 @@
 #!/bin/sh
-DOCKER_VERSION=1.8.1
+DOCKER_VERSION=1.8.2
 curl -o /tmp/docker.rpm -sSL http://yum.dockerproject.org/repo/main/centos/7/Packages/docker-engine-$DOCKER_VERSION-1.el7.centos.x86_64.rpm
 yum localinstall -y --nogpgcheck /tmp/docker.rpm
 
@@ -8,7 +8,7 @@ systemctl enable docker
 systemctl start docker
 
 # Install docker
-WEAVE_VERSION=1.0.1
+WEAVE_VERSION=1.1.0
 curl -sSL -o /usr/bin/weave https://github.com/weaveworks/weave/releases/download/v$WEAVE_VERSION/weave
 chmod a+x /usr/bin/weave
 weave setup
