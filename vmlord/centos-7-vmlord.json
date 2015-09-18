@@ -1,0 +1,68 @@
+{
+  "variables": {
+      "template_name": "centos-7-vmlord",
+
+      "iso_url": "https://mirrors.ustc.edu.cn/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso",
+      "iso_checksum": "d07ab3e615c66a8b2e9a50f4852e6a77",
+      "iso_checksum_type": "md5",
+
+      "headless": "true",
+      "memory_size": "2048",
+      "cpu_count": "1"
+  },
+  "builders": [
+    {
+      "name": "vbox",
+      "vm_name": "{{user `template_name`}}",
+      "type": "virtualbox-iso",
+      "guest_os_type": "RedHat_64",
+
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+
+      "boot_wait": "10s",
+      "disk_size": 20480,
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
+      ],
+
+      "http_directory": "http",
+
+      "ssh_username": "root",
+      "ssh_password": "",
+      "ssh_wait_timeout": "60m",
+
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory_size`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpu_count`}}"
+        ]
+      ],
+      "shutdown_command": "/sbin/halt -h -p",
+
+      "hard_drive_interface": "scsi",
+      "guest_additions_mode": "disable",
+      "format": "ova",
+      "export_opts": ["--options", "manifest,nomacs"]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/packages.sh",
+        "scripts/cleanup.sh"
+      ],
+      "execute_command": "{{.Vars}} bash '{{.Path}}'"
+    }
+  ]
+}
