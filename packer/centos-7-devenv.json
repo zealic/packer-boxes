@@ -1,6 +1,7 @@
 {
   "variables": {
       "template_name": "centos-7-devenv",
+      "version": "0.0.0",
 
       "iso_url": "https://mirrors.ustc.edu.cn/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso",
       "iso_checksum": "d07ab3e615c66a8b2e9a50f4852e6a77",
@@ -48,44 +49,6 @@
         ]
       ],
       "shutdown_command": "sudo -S /sbin/halt -h -p"
-    },
-    {
-      "name": "vmwf",
-      "vm_name": "{{user `template_name`}}",
-      "vmdk_name": "{{user `template_name`}}",
-      "type": "vmware-iso",
-      "guest_os_type": "centos-64",
-
-      "iso_url": "{{user `iso_url`}}",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
-
-      "boot_wait": "10s",
-      "disk_size": 20480,
-      "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
-      ],
-
-      "http_directory": "http",
-
-      "ssh_password": "vagrant",
-      "ssh_username": "vagrant",
-      "ssh_wait_timeout": "60m",
-
-      "vmx_data": {
-        "memsize": "{{user `memory_size`}}",
-        "numvcpus": "{{user `cpu_count`}}",
-        "vhv.enable": "TRUE",
-        "ethernet0.virtualDev": "e1000",
-        "ethernet0.networkName": "Virtual Machine Network",
-        "ethernet0.present": "TRUE"
-      },
-      "vmx_data_post": {
-        "guestos": "vmkernel5",
-        "ide1:0.present": "FALSE"
-      },
-
-      "shutdown_command": "sudo -S /sbin/halt -h -p"
     }
   ],
   "provisioners": [
@@ -117,20 +80,9 @@
       "metadata": {
           "created_at": "{{timestamp}}",
           "provider": "virtualbox",
-          "version": "0.2.11"
+          "version": "{{user `version`}}"
       },
       "only": ["vbox"]
-    },
-    {
-      "type": "atlas",
-      "artifact": "zealic/centos-7-devenv",
-      "artifact_type": "vagrant.box",
-      "metadata": {
-          "created_at": "{{timestamp}}",
-          "provider": "vmware_desktop",
-          "version": "0.2.11"
-      },
-      "only": ["vmwf"]
     }
   ]],
   "push": {
