@@ -1,5 +1,5 @@
-/packer/packer_cache/
-/packer/output-*/
+packer_cache/
+output-*/
 /.vagrant/
-/packer/*.box
+*.box
 Vagrantfile
