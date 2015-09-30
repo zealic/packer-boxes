@@ -100,13 +100,32 @@
       "type": "shell",
       "scripts": [
         "scripts/packages.sh",
-        "scripts/vagrant.sh",
-        "scripts/vm-tools.sh",
         "scripts/docker.sh",
-        "scripts/lang-golang.sh",
-        "scripts/lang-python.sh",
-        "scripts/lang-ruby.sh",
-        "scripts/lang-nodejs.sh",
+        "scripts/vagrant.sh",
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/lang/golang.sh",
+        "scripts/lang/python.sh",
+        "scripts/lang/ruby.sh",
+        "scripts/lang/nodejs.sh",
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/vm-tools.sh"
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "only": ["remote"]
+    },
+    {
+      "type": "shell",
+      "scripts": [
         "scripts/cleanup.sh"
       ],
       "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
