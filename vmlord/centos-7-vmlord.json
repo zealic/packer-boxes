@@ -60,6 +60,7 @@
       "type": "shell",
       "scripts": [
         "scripts/packages.sh",
+        "scripts/cleanup.sh",
         "scripts/cleanup.sh"
       ],
       "execute_command": "{{.Vars}} bash '{{.Path}}'"

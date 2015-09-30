@@ -3,7 +3,7 @@
       "template_name": "centos-7-devenv",
       "version": "0.0.0",
 
-      "iso_url": "https://mirrors.ustc.edu.cn/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso",
+      "iso_url": "http://mirrors.kernel.org/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso",
       "iso_checksum": "d07ab3e615c66a8b2e9a50f4852e6a77",
       "iso_checksum_type": "md5",
 

@@ -24,7 +24,10 @@ sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/epel-testing.repo
 
 # Utils
 PACKAGES=(
+  curl
   tmux
+  vim
+  wget
 )
 
 yum install -y ${PACKAGES[@]}

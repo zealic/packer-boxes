@@ -22,15 +22,17 @@ sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/epel-testing.repo
 # Utils
 PACKAGES=(
   axel
-  gcc
+  curl
+  mtr
+  tmux
+  vim
+  wget
+
   htop
-  make
   nload
   nmap
   telnet
-  tmux
   iftop
-  mtr
 )
 
 yum install -y ${PACKAGES[@]}
