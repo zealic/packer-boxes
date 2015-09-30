@@ -1,6 +1,6 @@
 {
   "variables": {
-      "template_name": "centos-7-vmlord"
+      "template_name": "centos-7-generic"
   },
   "builders": [
     {
