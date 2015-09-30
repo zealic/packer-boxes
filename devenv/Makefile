@@ -1,15 +1,16 @@
 # Build for Packer
 BASE_NAME := centos-7-$(shell basename `pwd`)
+RELEASE_VERSION := $(shell cat ../VERSION)
 
 build: cleanup
-	@packer build -var-file=../variables-common.json -var-file=../variables-local.json $(BASE_NAME).json
+	@packer build -var-file=../variables-local.json -only=local $(BASE_NAME).json
 
 push:
-	@packer push -var-file=../variables-common.json $(BASE_NAME).json
+	@packer push -var VERSION=$(RELEASE_VERSION) $(BASE_NAME).json
 
 cleanup:
-	@if [ -d output-vbox ]; then \
-	  rm -r output-vbox; \
+	@if [ -d output-local ]; then \
+	  rm -r output-local; \
 	fi
 
 .PHONY: build push cleanup
