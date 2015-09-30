@@ -101,7 +101,7 @@
       "scripts": [
         "scripts/packages.sh",
         "scripts/docker.sh",
-        "scripts/vagrant.sh",
+        "scripts/vagrant.sh"
       ],
       "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     },
@@ -111,7 +111,7 @@
         "scripts/lang/golang.sh",
         "scripts/lang/python.sh",
         "scripts/lang/ruby.sh",
-        "scripts/lang/nodejs.sh",
+        "scripts/lang/nodejs.sh"
       ],
       "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     },
