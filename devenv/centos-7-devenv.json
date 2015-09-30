@@ -1,15 +1,6 @@
 {
   "variables": {
-      "template_name": "centos-7-devenv",
-      "version": "0.0.0",
-
-      "iso_url": "http://mirrors.kernel.org/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso",
-      "iso_checksum": "d07ab3e615c66a8b2e9a50f4852e6a77",
-      "iso_checksum_type": "md5",
-
-      "headless": "true",
-      "memory_size": "2048",
-      "cpu_count": "1"
+      "template_name": "centos-7-devenv"
   },
   "builders": [
     {
