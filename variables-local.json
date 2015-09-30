@@ -1,6 +1,7 @@
 {
   "version": "0.0.0",
   "headless": "false",
+  "build_location": "local",
 
   "iso_url": "https://mirrors.ustc.edu.cn/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso"
 }

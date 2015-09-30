@@ -2,6 +2,7 @@
   "variables": {
     "version": "0.0.0",
     "headless": "true",
+    "build_location": "remote",
 
     "template_name": "centos-7-devenv",
 
@@ -26,7 +27,7 @@
       "boot_wait": "10s",
       "disk_size": 20480,
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-{{user `build_location`}}.cfg<enter>"
       ],
 
       "http_directory": "http",
