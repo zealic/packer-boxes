@@ -3,7 +3,7 @@ BASE_NAME := centos-7-$(shell basename `pwd`)
 RELEASE_VERSION := $(shell cat ../VERSION)
 
 build: cleanup
-	@packer build -var-file=../variables-local.json -only=local $(BASE_NAME).json
+	@packer build -var VERSION=0.0.0 -var-file=../variables-local.json -only=local $(BASE_NAME).json
 
 push:
 	@packer push -var VERSION=$(RELEASE_VERSION) $(BASE_NAME).json

@@ -1,6 +1,6 @@
 {
   "variables": {
-    "version": "0.0.0",
+    "version": "{{env `VERSION`}}",
     "headless": "true",
     "build_location": "remote",
 
