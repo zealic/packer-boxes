@@ -1,5 +1,6 @@
 packer_cache/
 output-*/
 /.vagrant/
+*.generated.json
 *.box
 Vagrantfile
