@@ -5,7 +5,7 @@ Provided vagrant boxes for develop, testing and deploy.
 ## Usage
 1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Install [Vagrant](https://www.vagrantup.com)
-3. Use `vagrant add box zealic/centos-7-devenv` to initialize Vagrantfile
+3. Use `vagrant box add zealic/centos-7-devenv` to initialize Vagrantfile
 4. Use `vagrant plugin install vagrant-vbguest` install plugin
 5. Use `vagrant up` to boot vagrant environment
 
@@ -23,12 +23,14 @@ To build vagrant box, you need:
 ## Boxes
 ### CentOS 7
 
-#### :star: [centos-7-devenv](https://atlas.hashicorp.com/zealic/centos-7-devenv)
+#### :star: [centos-7-generic](https://atlas.hashicorp.com/zealic/centos-7-generic)
+**Packages:**
+* [Docker](https://www.docker.com)
 
+#### :star: [centos-7-devenv](https://atlas.hashicorp.com/zealic/centos-7-devenv)
 **Packages:**
 * VirtualBox Guest Additions
 * [Docker](https://www.docker.com)
-* [Weave](https://github.com/weaveworks/weave)
 * [Go](https://golang.org)
 * [Python](https://www.python.org)
   - pip

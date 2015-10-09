@@ -1,6 +1,6 @@
 #!/bin/sh
 yum install -y python python-devel python-pip
-pip install distribute virtualenv nose 
+pip install distribute virtualenv nose
 
 mkdir -p /root/.pip
 cat > /root/.pip/pip.conf <<EOF
