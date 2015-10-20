@@ -1,6 +1,3 @@
-packer_cache/
-output-*/
 /.vagrant/
-*.generated.json
-*.box
+/.target/
 Vagrantfile

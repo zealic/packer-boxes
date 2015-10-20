@@ -17,10 +17,10 @@
       "boot_wait": "10s",
       "disk_size": 20480,
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-{{user `build_location`}}.cfg<enter>"
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
       ],
 
-      "http_directory": "http",
+      "http_directory": ".",
 
       "ssh_password": "vagrant",
       "ssh_username": "vagrant",
@@ -87,7 +87,7 @@
     },
     {
       "type": "atlas",
-      "artifact": "zealic/centos-7-devenv",
+      "artifact": "zealic/{{user `template_name`}}",
       "artifact_type": "vagrant.box",
       "metadata": {
           "created_at": "{{timestamp}}",
@@ -98,7 +98,9 @@
     }
   ]],
   "push": {
-    "name": "zealic/centos-7-devenv",
-    "exclude": [".*", "*.json", "*.box", "output-*", "packer_cache", "Makefile", "Vagrantfile"]
+    "name": "zealic/{{user `template_name`}}",
+    "exclude": [
+      ".*", "*.box", "output-*", "packer_cache", "*.json"
+    ]
   }
 }
