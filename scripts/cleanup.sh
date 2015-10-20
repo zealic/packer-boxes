@@ -23,6 +23,9 @@ sed -i '/^HWADDR/d' /etc/sysconfig/network-scripts/ifcfg-enp0s3
 ##########################################################
 # Other
 ##########################################################
+# Remove root permit permission on ssh
+sed -i -E '/^Permit.+/d' /etc/ssh/sshd_config
+
 # Remove Virtualbox specific files
 rm -rf /usr/src/vboxguest* /usr/src/virtualbox-ose-guest*
 rm -rf *.iso *.iso.? /tmp/vbox /home/vagrant/.vbox_version

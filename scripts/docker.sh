@@ -7,7 +7,7 @@ yum localinstall -y --nogpgcheck /tmp/docker.rpm
 # Add vagrant user to docker group
 getent passwd vagrant >/dev/null 2>&1 && ret=true
 if $ret; then
-  usermod vagrant -a -G docker vagrant
+  usermod -a -G docker vagrant
 fi
 
 # Enable docker

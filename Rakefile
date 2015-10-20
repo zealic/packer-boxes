@@ -58,7 +58,8 @@ def load_template(target, location)
   Dir.chdir(get_basedir(target)) do
     IO.write(generated_file, JSON.dump(template))
     ks_scope = template['variables'].each_with_object({}){|(k,v), h| h[k.to_sym] = v}
-    IO.write(ks_file, ks_template % ks_scope)
+    # kickstart file not support CRLF newline
+    IO.binwrite(ks_file, ks_template % ks_scope)
   end
   # Copy scripts
   FileUtils.rm_rf(Dir.glob(get_basedir(target) + "/scripts"))
