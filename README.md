@@ -11,13 +11,23 @@ Provided vagrant boxes for develop, testing and deploy.
 
 For more information, visit [Vagrant Documentation](https://docs.vagrantup.com/v2/)
 
+### Availables targets
+* generic
+* devenv
+
 
 ## Build
 To build vagrant box, you need:
 
 1. Get an [Atlas](http://atlas.hashicorp.com) account
 2. Install [Packer](http://www.packer.io)
-3. Use [Packer Push](https://www.packer.io/docs/command-line/push.html) to build
+3. Use `rake 'build[generic]'` or `rake 'build[devenv]'` to build
+
+### Availables tasks
+* build
+* build_ova
+* push
+* generate
 
 
 ## Boxes
@@ -35,8 +45,8 @@ To build vagrant box, you need:
 * [Python](https://www.python.org)
   - pip
   - virtualenv
-  - nose
 * [Node.js](https://nodejs.org)
+  - nose
   - npm
   - bower
   - grunt
