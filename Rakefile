@@ -5,6 +5,7 @@ require 'fileutils'
 
 DEFAULT_TARGET  = 'generic'
 CONFIG          = YAML.load(IO.read('config.yml'))
+BASE_OS         = 'centos-7'
 
 
 ###########################################################
@@ -23,7 +24,7 @@ def load_template(target, location)
   generated_file = "packer-template.json"
 
   template = nil
-  File.open("boxes/centos-7-#{target}/template.json", "r" ) do |f|
+  File.open("boxes/#{get_fullname(target)}/template.json", "r" ) do |f|
     template = JSON.load(f)
   end
 
@@ -50,11 +51,12 @@ def load_template(target, location)
   CONFIG["variables"][location].each do |k,v|
     template['variables'][k] = v
   end
-  template['variables']['version'] = CONFIG['version']
+  template['variables']['atlas_user']     = CONFIG['atlas_user']
+  template['variables']['version']        = CONFIG['version']
   template['variables']['build_location'] = location
 
   # Generate template
-  ks_template = IO.read("boxes/centos-7-#{target}/ks.cfg")
+  ks_template = IO.read("boxes/#{get_fullname(target)}/ks.cfg")
   Dir.chdir(get_basedir(target)) do
     IO.write(generated_file, JSON.dump(template))
     ks_scope = template['variables'].each_with_object({}){|(k,v), h| h[k.to_sym] = v}
@@ -76,7 +78,11 @@ def run_build(target, template_file, location)
 end
 
 def get_basedir(target)
-  return ".target/centos-7-#{target}"
+  return ".target/#{get_fullname(target)}"
+end
+
+def get_fullname(target)
+  return "#{BASE_OS}-#{target}"
 end
 
 ###########################################################
@@ -105,7 +111,7 @@ task :push, [:target] do |t, args|
   template_file = load_template(target, "remote")
 
   Dir.chdir(get_basedir(target)) do
-    exec 'packer', 'push', template_file
+    exec 'packer', 'push', "-name=#{CONFIG["atlas_user"]}/#{get_fullname(target)}", template_file
     File.delete(template_file)
   end
 end

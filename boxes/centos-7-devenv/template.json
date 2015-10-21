@@ -87,7 +87,7 @@
     },
     {
       "type": "atlas",
-      "artifact": "zealic/{{user `template_name`}}",
+      "artifact": "{{user `atlas_user`}}/{{user `template_name`}}",
       "artifact_type": "vagrant.box",
       "metadata": {
           "created_at": "{{timestamp}}",
@@ -98,7 +98,6 @@
     }
   ]],
   "push": {
-    "name": "zealic/{{user `template_name`}}",
     "exclude": [
       ".*", "*.box", "output-*", "packer_cache", "*.json"
     ]
