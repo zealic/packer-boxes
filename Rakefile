@@ -4,6 +4,7 @@ require 'yaml'
 require 'fileutils'
 require './lib/helpers'
 
+STDOUT.sync = true
 
 # Load rake tasks
 Dir.glob('lib/tasks/*.rake').each { |r| load r}
