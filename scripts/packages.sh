@@ -25,6 +25,7 @@ yum update -y
 
 # Utils
 PACKAGES=(
+  cloud-init
   axel
   curl
   mtr

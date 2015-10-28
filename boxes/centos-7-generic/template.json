@@ -15,8 +15,8 @@
       "iso_checksum": "{{user `iso_checksum`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
 
-      "boot_wait": "10s",
-      "disk_size": 20480,
+      "boot_wait": "5s",
+      "disk_size": 10240,
       "boot_command": [
         "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
       ],
@@ -24,7 +24,7 @@
       "http_directory": ".",
 
       "ssh_username": "root",
-      "ssh_password": "",
+      "ssh_password": "root",
       "ssh_wait_timeout": "60m",
 
       "vboxmanage": [
