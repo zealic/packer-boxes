@@ -4,7 +4,7 @@ default_target: "generic"
 atlas_user: "zealic"
 
 variables:
-  local: {
+  _: {
     "headless": "false",
     "build_location": "local",
     "iso_url": "https://mirrors.ustc.edu.cn/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso",
@@ -12,7 +12,7 @@ variables:
     "iso_checksum_type": "md5",
     "source_url": "https://mirrors.ustc.edu.cn/centos/7/os/x86_64/"
   }
-  remote: {
+  push: {
     "headless": "true",
     "build_location": "remote",
     "iso_url": "http://mirrors.kernel.org/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso",

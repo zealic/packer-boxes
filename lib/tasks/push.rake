@@ -1,10 +1,10 @@
-# Push packer template to atlas
-task :push, [:target] do |t, args|
-  template = load_template(args[:target], "remote")
+require './lib/packer_template'
 
-  target = template.target
-  Dir.chdir(get_basedir(target)) do
-    exec 'packer', 'push', "-name=#{CONFIG["atlas_user"]}/#{get_fullname(target)}", template.file
-    File.delete(template.file)
+namespace :push do
+  FORMATS.each do |format|
+    task format.to_sym do
+      template = PackerTemplate.new(format, ENV['target'], ENV['provider'], task_env = 'push')
+      template.push()
+    end
   end
 end

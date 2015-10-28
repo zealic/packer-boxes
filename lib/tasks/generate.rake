@@ -1,7 +1,11 @@
-# Generate packer template
-task :generate, [:target] do |t, args|
-  template = load_template(args[:target], "local")
+require './lib/packer_template'
 
-  generated_file = "#{get_basedir(template.target)}/#{template.file}"
-  puts "Template file '#{generated_file}' generated."
+namespace :generate do
+  FORMATS.each do |format|
+    task format.to_sym do
+      template = PackerTemplate.new(format, ENV['target'], ENV['provider'])
+      template.generate()
+      puts "Template file '#{template.file}' generated."
+    end
+  end
 end

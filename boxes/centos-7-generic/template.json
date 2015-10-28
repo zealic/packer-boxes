@@ -1,15 +1,12 @@
 {
   "variables": {
-    "template_name": "centos-7-generic",
     "memory_size": "1024",
     "cpu_count": "1"
   },
   "builders": [
     {
-      "name": "{{user `build_location`}}",
+      "name": "{{user `build_format`}}",
       "vm_name": "{{user `template_name`}}",
-      "type": "virtualbox-iso",
-      "guest_os_type": "RedHat_64",
 
       "iso_url": "{{user `iso_url`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
@@ -27,20 +24,6 @@
       "ssh_password": "root",
       "ssh_wait_timeout": "60m",
 
-      "vboxmanage": [
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--memory",
-          "{{user `memory_size`}}"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--cpus",
-          "{{user `cpu_count`}}"
-        ]
-      ],
       "shutdown_command": "/sbin/halt -h -p"
     }
   ],
@@ -59,7 +42,7 @@
     {
       "type": "vagrant",
       "keep_input_artifact": false,
-      "only": ["remote"]
+      "only": ["vagrant"]
     },
     {
       "type": "atlas",
@@ -70,7 +53,7 @@
           "provider": "virtualbox",
           "version": "{{user `version`}}"
       },
-      "only": ["remote"]
+      "only": ["vagrant"]
     }
   ]],
   "push": {

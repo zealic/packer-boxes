@@ -2,7 +2,6 @@ require 'rake'
 require 'json'
 require 'yaml'
 require 'fileutils'
-require './lib/helpers'
 
 
 # Load rake tasks

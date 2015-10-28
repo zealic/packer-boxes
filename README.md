@@ -21,7 +21,7 @@ To build vagrant box, you need:
 
 1. Get an [Atlas](http://atlas.hashicorp.com) account
 2. Install [Packer](http://www.packer.io)
-3. Use `rake 'build[generic]'` or `rake 'build[devenv]'` to build
+3. Use `rake 'build:vagrant` or `build:vagrant target=devenv` to build
 
 ### Availables tasks
 * build
