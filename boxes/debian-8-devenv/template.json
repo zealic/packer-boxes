@@ -1,0 +1,61 @@
+{
+  "variables": {
+    "memory_size": "1024",
+    "cpu_count": "1"
+  },
+  "builders": [
+    {
+      "name": "{{user `build_format`}}",
+
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+
+      "boot_wait": "5s",
+      "disk_size": 10240,
+      "boot_command": [
+        "<esc><wait>",
+        "install <wait>",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg <wait>",
+        "auto <wait>",
+        "debian-installer=en_US <wait>",
+        "locale=en_US <wait>",
+        "netcfg/get_hostname=localhost <wait>",
+        "netcfg/get_domain=localhost <wait>",
+        "keymap=us <wait>",
+        "<enter><wait>"
+      ],
+
+      "http_directory": ".",
+
+      "ssh_password": "vagrant",
+      "ssh_username": "vagrant",
+      "ssh_wait_timeout": "60m",
+
+      "shutdown_command": "sudo -S /sbin/halt -h -p"
+    }
+  ],
+  "post-processors": [[
+    {
+      "type": "vagrant",
+      "keep_input_artifact": false,
+      "only": ["vagrant"]
+    },
+    {
+      "type": "atlas",
+      "artifact": "{{user `atlas_user`}}/{{user `template_name`}}",
+      "artifact_type": "vagrant.box",
+      "metadata": {
+          "created_at": "{{timestamp}}",
+          "provider": "virtualbox",
+          "version": "{{user `version`}}"
+      },
+      "only": ["vagrant"]
+    }
+  ]],
+  "push": {
+    "exclude": [
+      ".*", "*.box", "output-*", "packer_cache", "*.json"
+    ]
+  }
+}

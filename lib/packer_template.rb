@@ -2,29 +2,24 @@
 # Definitions
 ###########################################################
 CONFIG           = YAML.load(IO.read('config.yml'))
-BASE_OS          = 'centos-7'
-FORMATS          = ["ami", "ova", "vagrant", "qemu"]
-TARGETS          = ["generic", "devenv"]
-DEFAULT_TARGET   = TARGETS.first()
+FORMATS          = ["ova", "vagrant"]
+DEFAULT_MANIFEST = 'centos-7-devenv'
 DEFAULT_PROVIDER = 'virtualbox'
 
 class PackerTemplate
-  attr_accessor :file
-  attr_accessor :target
-  attr_accessor :provider
-  attr_accessor :build_format
-  attr_reader   :builder_template
-  attr_reader   :packer_template
+  attr_reader :build_format, :manifest, :provider
+  attr_reader :file, :packer_template, :builder_template
 
-  def initialize(build_format, target, provider, task_env = nil)
-    @target = normalize_target(target || DEFAULT_TARGET)
-    @build_format = build_format
-    @provider = provider || DEFAULT_PROVIDER
-    @file = File.join(get_basedir(@target), "packer-template.json")
-    FileUtils.mkdir_p(get_basedir(@target))
+  def initialize(build_format, manifest, provider, task_env = nil)
+    defaults = CONFIG['defaults']
+    @build_format = build_format || defaults['build_format']
+    @manifest = normalize_manifest(manifest || defaults['manifest'])
+    @provider = provider || defaults['provider']
+    @file = File.join(get_basedir(), "packer-template.json")
+    FileUtils.mkdir_p(get_basedir())
 
     # Load packer template
-    File.open("boxes/#{get_fullname(@target)}/template.json", "r" ) do |f|
+    File.open("boxes/#{@manifest}/template.json", "r" ) do |f|
       @packer_template = JSON.load(f)
     end
     if @packer_template["builders"].count != 1 then
@@ -34,13 +29,14 @@ class PackerTemplate
     @packer_template['builders'] = []
 
     # Setup variables
-    variables = CONFIG["variables"][task_env] || CONFIG["variables"]['_'].each do |k,v|
+    mf_vars = CONFIG["manifests"][@manifest]
+    variables = mf_vars[task_env] || mf_vars['_'].each do |k,v|
       @packer_template['variables'][k] = v
     end
     @packer_template['variables']['atlas_user']     = CONFIG['atlas_user']
     @packer_template['variables']['version']        = CONFIG['version']
-    @packer_template['variables']['template_name']  = get_fullname(@target)
-    @packer_template['variables']['build_format']   = build_format
+    @packer_template['variables']['template_name']  = @manifest
+    @packer_template['variables']['build_format']   = @build_format
     @packer_template['variables']['provider']       = @provider
   end
 
@@ -48,7 +44,7 @@ class PackerTemplate
     generate()
 
     # Run packer build
-    Dir.chdir(get_basedir(@target)) do
+    Dir.chdir(get_basedir()) do
       FileUtils.rm_rf(Dir.glob("output-#{@build_format}"))
       filename = File.basename(@file)
       exec "sh", "-c", "packer build -only=#{@build_format} #{filename}"
@@ -60,22 +56,37 @@ class PackerTemplate
     template = @packer_template.clone
     template['builders'].push(make_builder(@build_format))
 
-    # For only content
+    # For vagrant only instruction
     if @build_format != 'vagrant' then
       template['builders'].push(make_builder('vagrant'))
     end
-    IO.write(@file, JSON.dump(template))
+
+    # Normalize provisioners
+    (template['provisioners'] || []).each do |p|
+      if p['type'] == 'shell' then
+        {
+          'BUILD_FORMAT': @build_format,
+          'BUILD_MANIFEST': @manifest,
+          'BUILD_PROVIDER': @provider
+        }.each do |k, v|
+          p['environment_vars'].push("#{k}=#{v}")
+        end
+      end
+    end
+
+    # Generate template
+    IO.binwrite(@file, JSON.pretty_generate(template))
 
     # Generate ks template
-    ks_template = IO.read("boxes/#{get_fullname(@target)}/ks.cfg")
-    Dir.chdir(get_basedir(@target)) do
+    ks_template = IO.read("boxes/#{@manifest}/ks.cfg")
+    Dir.chdir(get_basedir()) do
       ks_scope = @packer_template['variables'].each_with_object({}){|(k,v), h| h[k.to_sym] = v}
       # kickstart file not support CRLF newline
       IO.binwrite("ks.cfg", ks_template % ks_scope)
     end
 
     # Copy scripts
-    target_dir = get_basedir(@target)
+    target_dir = get_basedir()
     FileUtils.rm_rf(Dir.glob(target_dir + "/scripts"))
     FileUtils.cp_r("scripts", target_dir)
   end
@@ -83,12 +94,22 @@ class PackerTemplate
   def push()
     generate()
 
-    Dir.chdir(get_basedir(@target)) do
+    Dir.chdir(get_basedir()) do
       FileUtils.rm_rf(Dir.glob("output-#{@name}"))
       filename = File.basename(@file)
-      atlas_name = "#{CONFIG["atlas_user"]}/#{get_fullname(@target)}"
+      atlas_name = "#{CONFIG["atlas_user"]}/#{@manifest}"
       exec 'packer', 'push', "-name=#{atlas_name}", filename
     end
+  end
+
+  private
+  def is_debian()
+    @manifest.start_with?("debian")
+  end
+
+  private
+  def is_centos()
+    @manifest.start_with?("centos")
   end
 
   private
@@ -104,16 +125,9 @@ class PackerTemplate
     builder = @builder_template.clone
     builder['name'] = format
 
+    provider = @provider
     # Formats
-    if format == "vagrant" then
-      provider = "virtualbox"
-    elsif format == "ami" then
-      if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil then
-        provider = "vmware"
-      else
-        provider = "qemu"
-      end
-    elsif format == "ova" then
+    if format == "ova" then
       provider = "virtualbox"
       builder['hard_drive_interface'] = "scsi"
       builder['guest_additions_mode'] = "disable"
@@ -123,14 +137,26 @@ class PackerTemplate
 
     if provider == "virtualbox" then
       builder['type'] = "virtualbox-iso"
-      builder['guest_os_type'] = "RedHat_64"
+      if is_debian then
+        builder['guest_os_type'] = "Debian_64"
+      elsif is_centos then
+        builder['guest_os_type'] = "RedHat_64"
+      else
+        builder['guest_os_type'] = "Other"
+      end
       builder['vboxmanage'] = [
         ["modifyvm", "{{.Name}}", "--memory", "{{user `memory_size`}}"],
         ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpu_count`}}"]
       ]
     elsif provider == "vmware" then
       builder['type'] = "vmware-iso"
-      builder['guest_os_type'] = "centos-64"
+      if is_debian then
+        builder['guest_os_type'] = "debian8-64"
+      elsif is_centos then
+        builder['guest_os_type'] = "centos-64"
+      else
+        builder['guest_os_type'] = "Other"
+      end
       builder['version'] = '11'
       builder['vmx_data'] = {
         "memsize": "{{user `memory_size`}}",
@@ -143,23 +169,23 @@ class PackerTemplate
         ["-nographic", ""]
       ]
       builder["headless"] = "true"
+    else
+      fail("Not supported provider '#{provider}'.")
     end
 
     return builder
   end
 
-  def normalize_target(target)
-    unless TARGETS.include?(target) then
-      fail("Invalid target '#{target}', must be in #{TARGETS}.") 
+  def normalize_manifest(manifest)
+    manifests = Dir['boxes/*/'].map { |a| File.basename(a) }
+    unless manifests.include?(manifest) then
+      #fail("Invalid manifest '#{manifest}', must be in #{manifests}.") 
     end
-    return target
+    return manifest
   end
 
-  def get_basedir(target)
-    return ".target/#{get_fullname(target)}"
-  end
-
-  def get_fullname(target)
-    return "#{BASE_OS}-#{target}"
+  private
+  def get_basedir()
+    return ".target/#{@manifest}"
   end
 end
