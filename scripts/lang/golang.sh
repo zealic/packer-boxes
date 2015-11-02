@@ -1,5 +1,10 @@
 #!/bin/sh
-yum install -y golang git subversion mercurial bzr
+if [[ $BUILD_GUEST_OS =~ centos ]]; then
+  yum install -y golang git subversion mercurial bzr
+elif [[ $BUILD_GUEST_OS =~ debian ]]; then
+  apt-get install -y golang git subversion mercurial bzr
+fi
+
 mkdir /go
 chown 777 /go
 cat > /etc/profile.d/golang.sh <<'EOF'

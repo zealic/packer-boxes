@@ -19,7 +19,26 @@
     {
       "type": "shell",
       "scripts": [
+        "scripts/packages.sh",
+        "scripts/docker.sh",
         "scripts/vagrant.sh"
+      ],
+      "execute_command": "echo '{{user `ssh_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/lang/golang.sh",
+        "scripts/lang/nodejs.sh",
+        "scripts/lang/python.sh",
+        "scripts/lang/ruby.sh"
+      ],
+      "execute_command": "echo '{{user `ssh_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/vm-tools.sh"
       ],
       "execute_command": "echo '{{user `ssh_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     },

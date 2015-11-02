@@ -14,32 +14,31 @@
         "scripts/docker.sh",
         "scripts/vagrant.sh"
       ],
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+      "execute_command": "echo '{{user `ssh_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     },
     {
       "type": "shell",
       "scripts": [
         "scripts/lang/golang.sh",
+        "scripts/lang/nodejs.sh",
         "scripts/lang/python.sh",
-        "scripts/lang/ruby.sh",
-        "scripts/lang/nodejs.sh"
+        "scripts/lang/ruby.sh"
       ],
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+      "execute_command": "echo '{{user `ssh_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     },
     {
       "type": "shell",
       "scripts": [
         "scripts/vm-tools.sh"
       ],
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "only": ["vagrant"]
+      "execute_command": "echo '{{user `ssh_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     },
     {
       "type": "shell",
       "scripts": [
         "scripts/cleanup.sh"
       ],
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+      "execute_command": "echo '{{user `ssh_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     }
   ],
   "post-processors": [[

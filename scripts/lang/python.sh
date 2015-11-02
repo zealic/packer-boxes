@@ -1,6 +1,9 @@
 #!/bin/sh
-yum install -y python python-devel python-pip
-pip install distribute virtualenv nose
+if [[ $BUILD_GUEST_OS =~ centos ]]; then
+  yum install -y python python-devel python-pip
+elif [[ $BUILD_GUEST_OS =~ debian ]]; then
+  apt-get install -y python python-dev python-pip
+fi
 
 mkdir -p /root/.pip
 cat > /root/.pip/pip.conf <<EOF
@@ -8,6 +11,8 @@ cat > /root/.pip/pip.conf <<EOF
 index-url = https://pypi.mirrors.ustc.edu.cn/simple
 EOF
 
-mkdir -p /home/vagrant/.pip
-cp /root/.pip/pip.conf /home/vagrant/.pip/pip.conf
-chown -R vagrant:vagrant /home/vagrant/.pip
+if [ $BUILD_FORMAT = "vagrant" ]; then
+  mkdir -p /home/vagrant/.pip
+  cp /root/.pip/pip.conf /home/vagrant/.pip/pip.conf
+  chown -R vagrant:vagrant /home/vagrant/.pip
+fi

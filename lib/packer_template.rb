@@ -39,7 +39,7 @@ class PackerTemplate
       'version':        CONFIG['version'],
       'template_name':  @manifest,
       'ssh_username':   'root',
-      'ssh_password':   #SecureRandom.base64,
+      'ssh_password':   SecureRandom.base64,
       'build_format':   @build_format,
       'build_date':     @build_date,
       'build_provider': @provider
