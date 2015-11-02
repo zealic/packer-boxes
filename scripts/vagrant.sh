@@ -1,13 +1,23 @@
 #!/usr/bin/env bash
-# Installing vagrant keys
-mkdir /home/vagrant/.ssh
-wget --no-check-certificate -O authorized_keys 'https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub'
-mv authorized_keys /home/vagrant/.ssh
-chown -R vagrant /home/vagrant/.ssh
-chmod -R go-rwsx /home/vagrant/.ssh
+if [ ! $BUILD_FORMAT = "vagrant" ];
+  echo "Build format is not vagrant format."
+  exit 0
+fi
 
-# Deps
-yum install -y net-tools bind-utils nfs-common portmap rpcbind libgssglue nfs-utils keyutils libevent nfs-utils-lib
+date > /etc/vagrant_box_build_time
+
+# Add vagrant user
+/usr/sbin/groupadd vagrant
+/usr/sbin/useradd vagrant -g vagrant -G wheel
+echo "vagrant" | passwd --stdin vagrant
+echo "vagrant        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers.d/vagrant
+chmod 0440 /etc/sudoers.d/vagrant
+
+# Installing vagrant keys
+mkdir -pm 700 /home/vagrant/.ssh
+wget --no-check-certificate 'https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub' -O /home/vagrant/.ssh/authorized_keys
+chmod 0600 /home/vagrant/.ssh/authorized_keys
+chown -R vagrant /home/vagrant/.ssh
 
 # Customize the message of the day
 echo 'Welcome to your Vagrant-built virtual machine.' > /etc/motd

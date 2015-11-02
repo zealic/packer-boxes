@@ -20,8 +20,6 @@
 
       "http_directory": ".",
 
-      "ssh_username": "root",
-      "ssh_password": "root",
       "ssh_wait_timeout": "60m",
 
       "shutdown_command": "/sbin/halt -h -p"

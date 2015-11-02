@@ -1,3 +1,5 @@
+require 'securerandom'
+
 ###########################################################
 # Definitions
 ###########################################################
@@ -8,7 +10,7 @@ DEFAULT_PROVIDER = 'virtualbox'
 
 class PackerTemplate
   attr_reader :build_format, :manifest, :provider
-  attr_reader :file, :packer_template, :builder_template
+  attr_reader :file, :build_date, :packer_template, :builder_template
 
   def initialize(build_format, manifest, provider, task_env = nil)
     defaults = CONFIG['defaults']
@@ -16,6 +18,7 @@ class PackerTemplate
     @manifest = normalize_manifest(manifest || defaults['manifest'])
     @provider = provider || defaults['provider']
     @file = File.join(get_basedir(), "packer-template.json")
+    @build_date = DateTime.now.strftime("%Y%m%d")
     FileUtils.mkdir_p(get_basedir())
 
     # Load packer template
@@ -36,8 +39,11 @@ class PackerTemplate
     @packer_template['variables']['atlas_user']     = CONFIG['atlas_user']
     @packer_template['variables']['version']        = CONFIG['version']
     @packer_template['variables']['template_name']  = @manifest
+    @packer_template['variables']['ssh_username']   = 'root'
+    @packer_template['variables']['ssh_password']   = SecureRandom.base64
     @packer_template['variables']['build_format']   = @build_format
-    @packer_template['variables']['provider']       = @provider
+    @packer_template['variables']['build_date']     = @build_date
+    @packer_template['variables']['build_provider'] = @provider
   end
 
   def build()
@@ -64,10 +70,12 @@ class PackerTemplate
     # Normalize provisioners
     (template['provisioners'] || []).each do |p|
       if p['type'] == 'shell' then
+        p['environment_vars'] = [] unless p['environment_vars']
         {
           'BUILD_FORMAT': @build_format,
+          'BUILD_DATE': @build_date,
           'BUILD_MANIFEST': @manifest,
-          'BUILD_PROVIDER': @provider
+          'BUILD_PROVIDER': "{{user `build_provider`}}",
         }.each do |k, v|
           p['environment_vars'].push("#{k}=#{v}")
         end
@@ -168,10 +176,13 @@ class PackerTemplate
       builder['qemuargs'] = [
         ["-nographic", ""]
       ]
-      builder["headless"] = "true"
+      builder['headless'] = "true"
     else
       fail("Not supported provider '#{provider}'.")
     end
+
+    builder['ssh_username'] = "{{user `ssh_username`}}"
+    builder['ssh_password'] = "{{user `ssh_password`}}"
 
     return builder
   end

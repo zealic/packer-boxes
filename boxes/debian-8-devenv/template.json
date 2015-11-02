@@ -6,6 +6,7 @@
   "builders": [
     {
       "name": "{{user `build_format`}}",
+      "vm_name": "{{user `template_name`}}",
 
       "iso_url": "{{user `iso_url`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
@@ -28,11 +29,25 @@
 
       "http_directory": ".",
 
-      "ssh_password": "vagrant",
-      "ssh_username": "vagrant",
       "ssh_wait_timeout": "60m",
 
       "shutdown_command": "sudo -S /sbin/halt -h -p"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/vagrant.sh"
+      ],
+      "execute_command": "echo '{{user `ssh_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/cleanup.sh"
+      ],
+      "execute_command": "echo '{{user `ssh_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     }
   ],
   "post-processors": [[

@@ -2,6 +2,9 @@
 ##########################################################
 # General
 ##########################################################
+# Clear root password
+passwd -d root
+
 # Remove Linux headers
 yum -y clean all
 
