@@ -1,28 +1,9 @@
 {
-  "variables": {
-    "memory_size": "1024",
-    "cpu_count": "1"
-  },
   "builders": [
     {
-      "name": "{{user `build_format`}}",
-      "vm_name": "{{user `template_name`}}",
-
-      "iso_url": "{{user `iso_url`}}",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
-
-      "boot_wait": "5s",
-      "disk_size": 10240,
       "boot_command": [
         "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
-      ],
-
-      "http_directory": ".",
-
-      "ssh_wait_timeout": "60m",
-
-      "shutdown_command": "/sbin/halt -h -p"
+      ]
     }
   ],
   "provisioners": [
@@ -53,10 +34,5 @@
       },
       "only": ["vagrant"]
     }
-  ]],
-  "push": {
-    "exclude": [
-      ".*", "*.box", "output-*", "packer_cache", "*.json"
-    ]
-  }
+  ]]
 }

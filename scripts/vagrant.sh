@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-if [ ! $BUILD_FORMAT = "vagrant" ];
+if [ ! $BUILD_FORMAT = "vagrant" ]; then
   echo "Build format is not vagrant format."
   exit 0
 fi

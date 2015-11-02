@@ -32,18 +32,22 @@ class PackerTemplate
     @packer_template['builders'] = []
 
     # Setup variables
+    @packer_template['variables'] = {
+      'memory_size':    "1024",
+      'cpu_count':      "1",
+      'atlas_user':     CONFIG['atlas_user'],
+      'version':        CONFIG['version'],
+      'template_name':  @manifest,
+      'ssh_username':   'root',
+      'ssh_password':   #SecureRandom.base64,
+      'build_format':   @build_format,
+      'build_date':     @build_date,
+      'build_provider': @provider
+    }
     mf_vars = CONFIG["manifests"][@manifest]
     variables = mf_vars[task_env] || mf_vars['_'].each do |k,v|
       @packer_template['variables'][k] = v
     end
-    @packer_template['variables']['atlas_user']     = CONFIG['atlas_user']
-    @packer_template['variables']['version']        = CONFIG['version']
-    @packer_template['variables']['template_name']  = @manifest
-    @packer_template['variables']['ssh_username']   = 'root'
-    @packer_template['variables']['ssh_password']   = SecureRandom.base64
-    @packer_template['variables']['build_format']   = @build_format
-    @packer_template['variables']['build_date']     = @build_date
-    @packer_template['variables']['build_provider'] = @provider
   end
 
   def build()
@@ -76,11 +80,17 @@ class PackerTemplate
           'BUILD_DATE': @build_date,
           'BUILD_MANIFEST': @manifest,
           'BUILD_PROVIDER': "{{user `build_provider`}}",
+          'BUILD_GUEST_OS': is_debian ? 'debian' : is_centos ? 'centos': 'other'
         }.each do |k, v|
           p['environment_vars'].push("#{k}=#{v}")
         end
       end
     end
+
+    # Generate push
+    template['push'] = {
+      "exclude": [".*", "*.box", "output-*", "packer_cache", "*.json"]
+    }
 
     # Generate template
     IO.binwrite(@file, JSON.pretty_generate(template))
@@ -132,6 +142,15 @@ class PackerTemplate
   def make_builder(format)
     builder = @builder_template.clone
     builder['name'] = format
+    builder['vm_name'] = "{{user `template_name`}}"
+    builder['iso_url'] = "{{user `iso_url`}}"
+    builder['iso_checksum'] = "{{user `iso_checksum`}}"
+    builder['iso_checksum_type'] = "{{user `iso_checksum_type`}}"
+    builder['http_directory'] = "."
+    builder['ssh_wait_timeout'] = "60m"
+    builder['boot_wait'] = "5s"
+    builder['shutdown_command'] = "sudo -S /sbin/halt -h -p"
+    builder['disk_size'] = 10240
 
     provider = @provider
     # Formats

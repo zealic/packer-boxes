@@ -11,7 +11,6 @@ manifests:
   centos-7-generic:
     _: {
       "headless": "false",
-      "build_location": "local",
       "iso_url": "https://mirrors.ustc.edu.cn/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso",
       "iso_checksum": "111379a06402e1e445c6aeee9401d031",
       "iso_checksum_type": "md5",
@@ -19,7 +18,6 @@ manifests:
     }
     push: {
       "headless": "true",
-      "build_location": "remote",
       "iso_url": "http://mirrors.kernel.org/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso",
       "iso_checksum": "111379a06402e1e445c6aeee9401d031",
       "iso_checksum_type": "md5",
@@ -28,7 +26,6 @@ manifests:
   centos-7-devenv:
     _: {
       "headless": "false",
-      "build_location": "local",
       "iso_url": "https://mirrors.ustc.edu.cn/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso",
       "iso_checksum": "111379a06402e1e445c6aeee9401d031",
       "iso_checksum_type": "md5",
@@ -36,7 +33,6 @@ manifests:
     }
     push: {
       "headless": "true",
-      "build_location": "remote",
       "iso_url": "http://mirrors.kernel.org/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso",
       "iso_checksum": "111379a06402e1e445c6aeee9401d031",
       "iso_checksum_type": "md5",
@@ -45,7 +41,6 @@ manifests:
   debian-8-devenv:
     _: {
       "headless": "false",
-      "build_location": "local",
       "iso_url": "http://mirrors.ustc.edu.cn/debian-cd/8.2.0/amd64/iso-cd/debian-8.2.0-amd64-netinst.iso",
       "iso_checksum": "762eb3dfc22f85faf659001ebf270b4f",
       "iso_checksum_type": "md5",
@@ -53,7 +48,6 @@ manifests:
     }
     push: {
       "headless": "true",
-      "build_location": "remote",
       "iso_url": "http://mirrors.kernel.org/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso",
       "iso_checksum": "762eb3dfc22f85faf659001ebf270b4f",
       "iso_checksum_type": "md5",
