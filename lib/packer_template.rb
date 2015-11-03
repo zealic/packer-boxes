@@ -4,7 +4,7 @@ require 'securerandom'
 # Definitions
 ###########################################################
 CONFIG           = YAML.load(IO.read('config.yml'))
-FORMATS          = ["ova", "vagrant"]
+FORMATS          = ["ova", "ovf", "qcow2", "vagrant"]
 DEFAULT_MANIFEST = 'centos-7-devenv'
 DEFAULT_PROVIDER = 'virtualbox'
 
@@ -154,12 +154,14 @@ class PackerTemplate
 
     provider = @provider
     # Formats
-    if format == "ova" then
+    if format == "ova" || format == "ovf" then
       provider = "virtualbox"
       builder['hard_drive_interface'] = "scsi"
       builder['guest_additions_mode'] = "disable"
-      builder['format'] = "ova"
+      builder['format'] = format
       builder['export_opts'] = ["--options", "manifest,nomacs"]
+    elsif format == "qcow2" then
+      provider = "qemu"
     end
 
     if provider == "virtualbox" then
