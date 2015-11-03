@@ -31,7 +31,7 @@ sed -i -r 's/^#?(PermitRootLogin|PasswordAuthentication) yes/\1 no/' /etc/ssh/ss
 
 # Remove Virtualbox specific files
 rm -rf /usr/src/vboxguest* /usr/src/virtualbox-ose-guest*
-rm -rf *.iso *.iso.? /tmp/vbox /home/vagrant/.vbox_version
+rm -rf *.iso *.iso.? /tmp/vbox /{root,vagrant}/.vbox_version
 
 # Cleanup disk
 dd if=/dev/zero of=/EMPTY bs=1M

@@ -1,7 +1,0 @@
-provisioners-shell:
-  - [
-      "scripts/packages.sh",
-      "scripts/docker.sh",
-      "scripts/vagrant.sh"
-    ]
-  - "scripts/cleanup.sh"

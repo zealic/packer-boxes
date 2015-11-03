@@ -5,8 +5,7 @@ require 'securerandom'
 ###########################################################
 CONFIG           = YAML.load(IO.read('config.yml'))
 FORMATS          = ["ova", "ovf", "qcow2", "vagrant"]
-DEFAULT_MANIFEST = 'centos-7-devenv'
-DEFAULT_PROVIDER = 'virtualbox'
+MANIFEST_DIR     = "manifests"
 
 class PackerTemplate
   attr_reader :build_format, :manifest, :provider
@@ -14,12 +13,12 @@ class PackerTemplate
 
   def initialize(build_format, manifest, provider, task_env = nil)
     defaults = CONFIG['defaults']
-    @build_format = build_format || defaults['build_format']
+    @build_format = build_format
     @manifest = normalize_manifest(manifest || defaults['manifest'])
     @provider = provider || defaults['provider']
     @file = File.join(get_basedir(), "packer-template.json")
     @build_date = DateTime.now.strftime("%Y%m%d")
-    @spec = YAML.load(IO.read("boxes/#{@manifest}/spec.yml"))
+    @spec = YAML.load(IO.read("#{MANIFEST_DIR}/#{@manifest}/spec.yml"))
     FileUtils.mkdir_p(get_basedir())
 
     # Load packer template
@@ -27,8 +26,8 @@ class PackerTemplate
       'variables': {
         'memory_size':    "1024",
         'cpu_count':      "1",
-        'atlas_user':     CONFIG['atlas_user'],
-        'version':        CONFIG['version'],
+        'atlas_user':     @spec['atlas_user'],
+        'version':        @spec['version'],
         'template_name':  @manifest,
         'ssh_username':   'root',
         'ssh_password':   SecureRandom.base64,
@@ -40,8 +39,8 @@ class PackerTemplate
     }
 
     # Setup variables
-    mf_vars = CONFIG["manifests"][@manifest]
-    (mf_vars[task_env] || mf_vars['_']).each do |k,v|
+    task_vars = @spec['variables']
+    (task_vars[task_env] || task_vars['default']).each do |k,v|
       @packer_template[:variables][k.to_sym] = v
     end
   end
@@ -79,7 +78,7 @@ class PackerTemplate
     env_list.each do |k, v|
       shell_env.push("#{k}=#{v}")
     end
-    (@spec['provisioners-shell'] || []).each do |p|
+    (@spec['remote-shell'] || []).each do |p|
       scripts = p.kind_of?(Array) ? p : [p]
       provisioners.push({
         'type': "shell",
@@ -92,7 +91,11 @@ class PackerTemplate
 
     # Generate push
     if options[:push] then
-      template[:post-processors] = [[
+      if @build_format != "vagrant" then
+        fail("Only vagrant format support push.")
+      end
+
+      template[:"post-processors"] = [[
         {
           "type": "vagrant",
           "keep_input_artifact": false,
@@ -119,7 +122,7 @@ class PackerTemplate
     IO.binwrite(@file, JSON.pretty_generate(template))
 
     # Generate ks template
-    ks_template = IO.read("boxes/#{@manifest}/ks.cfg")
+    ks_template = IO.read("#{MANIFEST_DIR}/#{@manifest}/ks.cfg")
     Dir.chdir(get_basedir()) do
       ks_scope = @packer_template[:variables].each_with_object({}){|(k,v), h| h[k.to_sym] = v}
       # kickstart file not support CRLF newline
@@ -246,7 +249,7 @@ class PackerTemplate
   end
 
   def normalize_manifest(manifest)
-    manifests = Dir['boxes/*/'].map { |a| File.basename(a) }
+    manifests = Dir["#{MANIFEST_DIR}/*/"].map { |a| File.basename(a) }
     unless manifests.include?(manifest) then
       fail("Invalid manifest '#{manifest}', must be in #{manifests}.") 
     end
