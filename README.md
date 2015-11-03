@@ -11,47 +11,52 @@ Provided vagrant boxes for develop, testing and deploy.
 
 For more information, visit [Vagrant Documentation](https://docs.vagrantup.com/v2/)
 
-### Availables targets
-* generic
-* devenv
-
 
 ## Build
 To build vagrant box, you need:
 
 1. Get an [Atlas](http://atlas.hashicorp.com) account
 2. Install [Packer](http://www.packer.io)
-3. Use `rake 'build:vagrant` or `build:vagrant target=devenv` to build
+3. Use `rake 'build:vagrant` or `build:vagrant manifest=debian-8-devenv` to build
 
 ### Availables tasks
 * build
-* build_ova
-* push
 * generate
+* push
+
+### Availables formats
+* ova
+* ovf
+* qcow2
+* vagrant
 
 
 ## Boxes
 ### CentOS 7
 
-#### :star: [centos-7-generic](https://atlas.hashicorp.com/zealic/centos-7-generic)
-**Packages:**
-* [Docker](https://www.docker.com)
-
 #### :star: [centos-7-devenv](https://atlas.hashicorp.com/zealic/centos-7-devenv)
 **Packages:**
-* VirtualBox Guest Additions
 * [Docker](https://www.docker.com)
 * [Go](https://golang.org)
 * [Python](https://www.python.org)
   - pip
   - virtualenv
 * [Node.js](https://nodejs.org)
-  - nose
-  - npm
-  - bower
-  - grunt
-  - gulp
-  - mocha
+* [Ruby](https://www.ruby-lang.org)
+  - Rake
+  - Bundler
+
+
+### Debian 8 (Jessie)
+
+#### :star: [debian-8-devenv](https://atlas.hashicorp.com/zealic/debian-8-devenv)
+**Packages:**
+* [Docker](https://www.docker.com)
+* [Go](https://golang.org)
+* [Python](https://www.python.org)
+  - pip
+  - virtualenv
+* [Node.js](https://nodejs.org)
 * [Ruby](https://www.ruby-lang.org)
   - Rake
   - Bundler
