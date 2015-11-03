@@ -1,12 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 ##########################################################
 # General
 ##########################################################
 # Clear root password
 passwd -d root
 
-# Remove Linux headers
-yum -y clean all
+# Cleanup package manager
+if [[ $BUILD_GUEST_OS =~ centos ]]; then
+  yum -y clean all
+elif [[ $BUILD_GUEST_OS =~ debian ]]; then
+  apt-get -y clean
+fi
+
 
 # Cleanup log files
 find /var/log -type f | while read f; do echo -ne '' > $f; done;

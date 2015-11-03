@@ -1,7 +1,10 @@
-#!/bin/sh
+#!/bin/bash
+BASE_VERSION=5.x
+
 if [[ $BUILD_GUEST_OS =~ centos ]]; then
-  yum install -y nodejs npm
+  curl -sL https://rpm.nodesource.com/setup_$BASE_VERSION | bash -
+  yum install -y nodejs
 elif [[ $BUILD_GUEST_OS =~ debian ]]; then
-  apt-get install -y nodejs npm
+  curl -sL https://deb.nodesource.com/setup_$BASE_VERSION | bash -
+  apt-get install -y -qq nodejs
 fi
-npm install -g bower grunt gulp mocha

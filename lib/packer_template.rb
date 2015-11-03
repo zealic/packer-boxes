@@ -75,13 +75,17 @@ class PackerTemplate
     (template['provisioners'] || []).each do |p|
       if p['type'] == 'shell' then
         p['environment_vars'] = [] unless p['environment_vars']
-        {
+        env_list = {
           'BUILD_FORMAT': @build_format,
           'BUILD_DATE': @build_date,
           'BUILD_MANIFEST': @manifest,
           'BUILD_PROVIDER': "{{user `build_provider`}}",
           'BUILD_GUEST_OS': is_debian ? 'debian' : is_centos ? 'centos': 'other'
-        }.each do |k, v|
+        }
+        if is_debian then
+          env_list['DEBIAN_FRONTEND'] = "noninteractive"
+        end
+        env_list.each do |k, v|
           p['environment_vars'].push("#{k}=#{v}")
         end
       end
@@ -175,7 +179,10 @@ class PackerTemplate
       end
       builder['vboxmanage'] = [
         ["modifyvm", "{{.Name}}", "--memory", "{{user `memory_size`}}"],
-        ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpu_count`}}"]
+        ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpu_count`}}"],
+        # DNS Speed Ip
+        ["modifyvm", "{{.Name}}", "--natdnshostresolver1", "on"],
+        ["modifyvm", "{{.Name}}", "--natdnsproxy1", "on"]
       ]
     elsif provider == "vmware" then
       builder['type'] = "vmware-iso"
@@ -211,7 +218,7 @@ class PackerTemplate
   def normalize_manifest(manifest)
     manifests = Dir['boxes/*/'].map { |a| File.basename(a) }
     unless manifests.include?(manifest) then
-      #fail("Invalid manifest '#{manifest}', must be in #{manifests}.") 
+      fail("Invalid manifest '#{manifest}', must be in #{manifests}.") 
     end
     return manifest
   end

@@ -7,7 +7,8 @@ EOF
 
 # Packages
 PACKAGES=(
-  cloud-init
+  ca-certificates
+  build-essential
   axel
   curl
   mtr
@@ -46,6 +47,6 @@ deb http://mirrors.ustc.edu.cn/debian jessie-updates main
 deb-src http://mirrors.ustc.edu.cn/debian jessie-updates main
 EOF
 
-  apt-get update -y
-  apt-get install -y ${PACKAGES[@]}
+  apt-get update -qq
+  apt-get install -y -qq ${PACKAGES[@]}
 fi
