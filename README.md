@@ -22,7 +22,7 @@ To build vagrant box, you need:
 # Build vagrant
 rake build:vagrant
 # Build ova with manifest
-rake build:vagrant manifest=debian-8-devenv
+rake build:ova manifest=debian-8-devenv
 # Build vagrant with Fuck GFW (China region)
 rake build:vagrant FUCK_GFW=1
 ```
