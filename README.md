@@ -17,7 +17,15 @@ To build vagrant box, you need:
 
 1. Get an [Atlas](http://atlas.hashicorp.com) account
 2. Install [Packer](http://www.packer.io)
-3. Use `rake 'build:vagrant` or `build:vagrant manifest=debian-8-devenv` to build
+3. Use below command:  
+```
+# Build vagrant
+rake build:vagrant
+# Build ova with manifest
+rake build:vagrant manifest=debian-8-devenv
+# Build vagrant with Fuck GFW (China region)
+rake build:vagrant FUCK_GFW=1
+```
 
 ### Availables tasks
 * build
@@ -25,9 +33,9 @@ To build vagrant box, you need:
 * push
 
 ### Availables formats
-* ova
-* ovf
-* qcow2
+* ova (VirtualBox provider only)
+* ovf (VirtualBox provider only)
+* qcow2 (qemu provider only)
 * vagrant
 
 

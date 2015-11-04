@@ -4,6 +4,9 @@ if [[ $BUILD_GUEST_OS =~ centos ]]; then
 elif [[ $BUILD_GUEST_OS =~ debian ]]; then
   apt-get install -y -qq ruby ruby-dev
 fi
-gem sources --remove https://rubygems.org/
-gem sources -a https://ruby.taobao.org/
+
+if [ -n "$FUCK_GFW" ]; then
+  gem sources --remove https://rubygems.org/
+  gem sources -a https://ruby.taobao.org/
+fi
 gem install rake bundler

@@ -59,7 +59,7 @@ class PackerTemplate
   def generate(options={})
     # Generate packer template
     template = @packer_template.clone
-    provider, builder = make_builder(@build_format)
+    provider, builder = make_builder(@build_format, options)
     template[:builders].push(builder)
 
     # Generate provisioners
@@ -70,7 +70,8 @@ class PackerTemplate
       'BUILD_DATE': @build_date,
       'BUILD_MANIFEST': @manifest,
       'BUILD_PROVIDER': "{{user `build_provider`}}",
-      'BUILD_GUEST_OS': is_debian ? 'debian' : is_centos ? 'centos': 'other'
+      'BUILD_GUEST_OS': is_debian ? 'debian' : is_centos ? 'centos': 'other',
+      'FUCK_GFW': ENV['FUCK_GFW'] ? '1' : ''
     }
     if is_debian then
       env_list['DEBIAN_FRONTEND'] = "noninteractive"
@@ -159,7 +160,7 @@ class PackerTemplate
   end
 
   private
-  def make_builder(format)
+  def make_builder(format, options)
     builder = {
       'name': format,
       'vm_name': "{{user `template_name`}}",
@@ -217,11 +218,13 @@ class PackerTemplate
       end
       builder['vboxmanage'] = [
         ["modifyvm", "{{.Name}}", "--memory", "{{user `memory_size`}}"],
-        ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpu_count`}}"],
-        # DNS Speed UP
-        ["modifyvm", "{{.Name}}", "--natdnshostresolver1", "on"],
-        ["modifyvm", "{{.Name}}", "--natdnsproxy1", "on"]
+        ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpu_count`}}"]
       ]
+      # DNS Speed UP
+      if not options[:push] then
+        builder['vboxmanage'].push(["modifyvm", "{{.Name}}", "--natdnshostresolver1", "on"])
+        builder['vboxmanage'].push(["modifyvm", "{{.Name}}", "--natdnsproxy1", "on"])
+      end
     elsif provider == "vmware" then
       builder['type'] = "vmware-iso"
       if is_debian then
