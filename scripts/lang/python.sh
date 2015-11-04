@@ -11,7 +11,7 @@ cat > /root/.pip/pip.conf <<EOF
 index-url = https://pypi.mirrors.ustc.edu.cn/simple
 EOF
 
-if [ $BUILD_FORMAT = "vagrant" ]; then
+if [[ $BUILD_FORMAT =~ vagrant ]]; then
   mkdir -p /home/vagrant/.pip
   cp /root/.pip/pip.conf /home/vagrant/.pip/pip.conf
   chown -R vagrant:vagrant /home/vagrant/.pip

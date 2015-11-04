@@ -1,5 +1,5 @@
 #!/bin/bash
-BASE_VERSION=5.x
+BASE_VERSION=4.x
 
 if [[ $BUILD_GUEST_OS =~ centos ]]; then
   curl -sL https://rpm.nodesource.com/setup_$BASE_VERSION | bash -

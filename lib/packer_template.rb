@@ -90,33 +90,35 @@ class PackerTemplate
     template[:provisioners] = provisioners
 
     # Generate push
+    processors = []
+    if @build_format == "vagrant" then
+      processors.push({
+        "type": "vagrant",
+        "keep_input_artifact": false,
+        "only": ["vagrant"]
+      })
+    end
     if options[:push] then
       if @build_format != "vagrant" then
         fail("Only vagrant format support push.")
       end
 
-      template[:"post-processors"] = [[
-        {
-          "type": "vagrant",
-          "keep_input_artifact": false,
-          "only": ["vagrant"]
+      processors.push({
+        "type": "atlas",
+        "artifact": "{{user `atlas_user`}}/{{user `template_name`}}",
+        "artifact_type": "vagrant.box",
+        "metadata": {
+            "created_at": "{{timestamp}}",
+            "provider": provider,
+            "version": "{{user `version`}}"
         },
-        {
-          "type": "atlas",
-          "artifact": "{{user `atlas_user`}}/{{user `template_name`}}",
-          "artifact_type": "vagrant.box",
-          "metadata": {
-              "created_at": "{{timestamp}}",
-              "provider": provider,
-              "version": "{{user `version`}}"
-          },
-          "only": ["vagrant"]
-        }
-      ]]
+        "only": ["vagrant"]
+      })
       template[:push] = {
         "exclude": [".*", "*.box", "output-*", "packer_cache", "*.json"]
       }
     end
+    template[:"post-processors"] = [processors]
 
     # Generate template
     IO.binwrite(@file, JSON.pretty_generate(template))
@@ -141,7 +143,7 @@ class PackerTemplate
     Dir.chdir(get_basedir()) do
       FileUtils.rm_rf(Dir.glob("output-#{@name}"))
       filename = File.basename(@file)
-      atlas_name = "#{CONFIG["atlas_user"]}/#{@manifest}"
+      atlas_name = "#{@spec['atlas_user']}/#{@manifest}"
       exec 'packer', 'push', "-name=#{atlas_name}", filename
     end
   end
@@ -186,7 +188,7 @@ class PackerTemplate
         "debian-installer=en_US <wait>",
         "locale=en_US <wait>",
         "netcfg/get_hostname=localhost <wait>",
-        "netcfg/get_domain=localhost <wait>",
+        "netcfg/get_domain=localdomain <wait>",
         "keymap=us <wait>",
         "<enter><wait>"
       ]
