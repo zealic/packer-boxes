@@ -8,15 +8,16 @@ FORMATS          = ["ova", "ovf", "qcow2", "vagrant"]
 MANIFEST_DIR     = "manifests"
 
 class PackerTemplate
-  attr_reader :build_format, :manifest, :provider, :region
+  attr_reader :build_format, :manifest, :provider, :region, :task
   attr_reader :file, :build_date, :spec, :packer_template
 
-  def initialize(build_format, manifest, provider, task_env = nil)
+  def initialize(opts)
     defaults = CONFIG['defaults']
-    @build_format = build_format
-    @manifest = normalize_manifest(manifest || defaults['manifest'])
-    @provider = provider || defaults['provider']
-    @region = region || defaults['region']
+    @build_format = opts[:format]
+    @manifest = normalize_manifest(opts[:manifest] || defaults['manifest'])
+    @provider = opts[:provider] || defaults['provider']
+    @region = opts[:region] || defaults['region']
+    @task = opts[:task]
     @file = File.join(get_basedir(), "packer-template.json")
     @build_date = DateTime.now.strftime("%Y%m%d")
     @spec = YAML.load(IO.read("#{MANIFEST_DIR}/#{@manifest}/spec.yml"))
@@ -41,9 +42,13 @@ class PackerTemplate
 
     # Setup variables
     task_vars = @spec['variables']
-    (task_vars[task_env] || task_vars['default']).each do |k,v|
+    (task_vars[@task] || task_vars['default']).each do |k,v|
       @packer_template[:variables][k.to_sym] = v
     end
+  end
+
+  def run()
+    send(@task)
   end
 
   def build()
@@ -57,10 +62,10 @@ class PackerTemplate
     end
   end
 
-  def generate(options={})
+  def generate()
     # Generate packer template
     template = @packer_template.clone
-    provider, builder = make_builder(@build_format, options)
+    provider, builder = make_builder()
     template[:builders].push(builder)
 
     # Generate provisioners
@@ -101,7 +106,7 @@ class PackerTemplate
         "only": ["vagrant"]
       })
     end
-    if options[:push] then
+    if @task == 'push' then
       if @build_format != "vagrant" then
         fail("Only vagrant format support push.")
       end
@@ -162,7 +167,8 @@ class PackerTemplate
   end
 
   private
-  def make_builder(format, options)
+  def make_builder()
+    format = @build_format
     builder = {
       'name': format,
       'vm_name': "{{user `template_name`}}",
@@ -173,7 +179,7 @@ class PackerTemplate
       'ssh_username': "{{user `ssh_username`}}",
       'ssh_password': "{{user `ssh_password`}}",
       'ssh_wait_timeout': "60m",
-      'boot_wait': "5s",
+      'boot_wait': "10s",
       'shutdown_command': "sudo -S /sbin/halt -h -p",
       'disk_size': 10240
     }
@@ -228,7 +234,7 @@ class PackerTemplate
         ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpu_count`}}"]
       ]
       # DNS Speed UP
-      if not options[:push] then
+      if @task == 'push' then
         builder['vboxmanage'].push(["modifyvm", "{{.Name}}", "--natdnshostresolver1", "on"])
         builder['vboxmanage'].push(["modifyvm", "{{.Name}}", "--natdnsproxy1", "on"])
       end
@@ -260,6 +266,7 @@ class PackerTemplate
     return provider, builder
   end
 
+  private
   def normalize_manifest(manifest)
     manifests = Dir["#{MANIFEST_DIR}/*/"].map { |a| File.basename(a) }
     unless manifests.include?(manifest) then

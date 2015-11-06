@@ -52,10 +52,10 @@ deb-src http://mirrors.ustc.edu.cn/debian jessie-updates main
 EOF
   else
     cat > /etc/apt/source.list <<"EOF"
-deb http://httpredir.debian.org/debian jessie main
-deb-src http://httpredir.debian.org/debian jessie main
-deb http://httpredir.debian.org/debian jessie-updates main
-deb-src http://httpredir.debian.org/debian jessie-updates main
+deb http://mirrors.kernel.org/debian jessie main
+deb-src http://mirrors.kernel.org/debian jessie main
+deb http://mirrors.kernel.org/debian jessie-updates main
+deb-src http://mirrors.kernel.org/debian jessie-updates main
 deb http://security.debian.org/ jessie/updates main
 deb-src http://security.debian.org/ jessie/updates main
 EOF

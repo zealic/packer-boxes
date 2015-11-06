@@ -3,8 +3,15 @@ require './lib/packer_template'
 namespace :push do
   FORMATS.each do |format|
     task format.to_sym do
-      template = PackerTemplate.new(format, ENV['manifest'], ENV['provider'], task_env = 'push')
-      template.push()
+      opts = {
+        :format   => format,
+        :manifest => ENV['manifest'],
+        :provider => ENV['provider'],
+        :region   => ENV['region'],
+        :task     => 'push'
+      }
+      template = PackerTemplate.new(opts)
+      template.run()
     end
   end
 end

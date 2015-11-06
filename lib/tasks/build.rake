@@ -3,8 +3,15 @@ require './lib/packer_template'
 namespace :build do
   FORMATS.each do |format|
     task format.to_sym do
-      template = PackerTemplate.new(format, ENV['manifest'], ENV['provider'])
-      template.build()
+      opts = {
+        :format   => format,
+        :manifest => ENV['manifest'],
+        :provider => ENV['provider'],
+        :region   => ENV['region'],
+        :task     => 'build'
+      }
+      template = PackerTemplate.new(opts)
+      template.run()
     end
   end
 end
