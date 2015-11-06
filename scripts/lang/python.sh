@@ -5,9 +5,9 @@ elif [[ $BUILD_GUEST_OS =~ debian ]]; then
   apt-get install -y -qq python python-dev python-pip
 fi
 
-if [ -n "$FUCK_GFW" ]; then
+if [[ $BUILD_REGION =~ cn ]]; then
   mkdir -p /root/.pip
-  cat > /root/.pip/pip.conf <<EOF
+  cat > /root/.pip/pip.conf <<"EOF"
 [global]
 index-url = https://pypi.mirrors.ustc.edu.cn/simple
 EOF

@@ -5,7 +5,7 @@ elif [[ $BUILD_GUEST_OS =~ debian ]]; then
   apt-get install -y -qq ruby ruby-dev
 fi
 
-if [ -n "$FUCK_GFW" ]; then
+if [[ $BUILD_REGION =~ cn ]]; then
   gem sources --remove https://rubygems.org/
   gem sources -a https://ruby.taobao.org/
 fi

@@ -8,7 +8,7 @@ FORMATS          = ["ova", "ovf", "qcow2", "vagrant"]
 MANIFEST_DIR     = "manifests"
 
 class PackerTemplate
-  attr_reader :build_format, :manifest, :provider
+  attr_reader :build_format, :manifest, :provider, :region
   attr_reader :file, :build_date, :spec, :packer_template
 
   def initialize(build_format, manifest, provider, task_env = nil)
@@ -16,6 +16,7 @@ class PackerTemplate
     @build_format = build_format
     @manifest = normalize_manifest(manifest || defaults['manifest'])
     @provider = provider || defaults['provider']
+    @region = region || defaults['region']
     @file = File.join(get_basedir(), "packer-template.json")
     @build_date = DateTime.now.strftime("%Y%m%d")
     @spec = YAML.load(IO.read("#{MANIFEST_DIR}/#{@manifest}/spec.yml"))
@@ -71,8 +72,9 @@ class PackerTemplate
       'BUILD_MANIFEST': @manifest,
       'BUILD_PROVIDER': "{{user `build_provider`}}",
       'BUILD_GUEST_OS': is_debian ? 'debian' : is_centos ? 'centos': 'other',
-      'FUCK_GFW': ENV['FUCK_GFW'] ? '1' : ''
+      'BUILD_REGION': @region
     }
+
     if is_debian then
       env_list['DEBIAN_FRONTEND'] = "noninteractive"
     end
@@ -119,7 +121,7 @@ class PackerTemplate
         "exclude": [".*", "*.box", "output-*", "packer_cache", "*.json"]
       }
     end
-    template[:"post-processors"] = [processors]
+    template[:"post-processors"] = processors
 
     # Generate template
     IO.binwrite(@file, JSON.pretty_generate(template))
@@ -185,12 +187,17 @@ class PackerTemplate
         "<esc><wait>",
         "install <wait>",
         "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg <wait>",
-        "auto <wait>",
         "debian-installer=en_US <wait>",
+        "auto <wait>",
         "locale=en_US <wait>",
+        "kbd-chooser/method=us <wait>",
+        "keyboard-configuration/xkb-keymap=us <wait>",
         "netcfg/get_hostname=localhost <wait>",
         "netcfg/get_domain=localdomain <wait>",
-        "keymap=us <wait>",
+        "fb=false <wait>",
+        "debconf/frontend=noninteractive <wait>",
+        "console-setup/ask_detect=false <wait>",
+        "console-keymaps-at/keymap=us <wait>",
         "<enter><wait>"
       ]
     end

@@ -1,5 +1,5 @@
 #!/bin/bash
-cat > /etc/environment <<EOF
+cat > /etc/environment <<"EOF"
 LANG=en_US.UTF-8
 LC_ALL=en_US.UTF-8
 EOF
@@ -22,8 +22,8 @@ PACKAGES=(
 if [[ $BUILD_GUEST_OS =~ centos ]]; then
   ###########################################################
   # Setup yum
-  if [ -n "$FUCK_GFW" ]; then
-    # Setup mirror on chinese
+  if [[ $BUILD_REGION =~ cn ]]; then
+    # Setup mirror on china
     sed -i 's|enabled=1|enabled=0|g' /etc/yum/pluginconf.d/fastestmirror.conf
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=https://mirrors.ustc.edu.cn|g' /etc/yum.repos.d/CentOS-Base.repo
     sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-Base.repo
@@ -31,7 +31,7 @@ if [[ $BUILD_GUEST_OS =~ centos ]]; then
 
   # Setup EPEL
   yum install -y epel-release
-  if [ -n "$FUCK_GFW" ]; then
+  if [[ $BUILD_REGION =~ cn ]]; then
     sed -i 's|#baseurl=http://download.fedoraproject.org/pub|baseurl=https://mirrors.ustc.edu.cn|g' /etc/yum.repos.d/epel.repo
     sed -i 's|mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/epel.repo
     sed -i 's|#baseurl=http://download.fedoraproject.org/pub|baseurl=https://mirrors.ustc.edu.cn|g' /etc/yum.repos.d/epel-testing.repo
@@ -41,14 +41,23 @@ if [[ $BUILD_GUEST_OS =~ centos ]]; then
   yum update -y
   yum install -y ${PACKAGES[@]}
 elif [[ $BUILD_GUEST_OS =~ debian ]]; then
-  if [ -n "$FUCK_GFW" ]; then
-    cat > /etc/apt/source.list <<EOF
+  if [[ $BUILD_REGION =~ cn ]]; then
+    cat > /etc/apt/source.list <<"EOF"
 deb http://mirrors.ustc.edu.cn/debian jessie main
 deb-src http://mirrors.ustc.edu.cn/debian jessie main
 deb http://mirrors.ustc.edu.cn/debian-security jessie/updates main
 deb-src http://mirrors.ustc.edu.cn/debian-security jessie/updates main
 deb http://mirrors.ustc.edu.cn/debian jessie-updates main
 deb-src http://mirrors.ustc.edu.cn/debian jessie-updates main
+EOF
+  else
+    cat > /etc/apt/source.list <<"EOF"
+deb http://httpredir.debian.org/debian jessie main
+deb-src http://httpredir.debian.org/debian jessie main
+deb http://httpredir.debian.org/debian jessie-updates main
+deb-src http://httpredir.debian.org/debian jessie-updates main
+deb http://security.debian.org/ jessie/updates main
+deb-src http://security.debian.org/ jessie/updates main
 EOF
   fi
 
