@@ -7,14 +7,16 @@ variables:
     "iso_url": "http://mirrors.ustc.edu.cn/debian-cd/8.2.0/amd64/iso-cd/debian-8.2.0-amd64-netinst.iso",
     "iso_checksum": "762eb3dfc22f85faf659001ebf270b4f",
     "iso_checksum_type": "md5",
-    "source_url": "mirrors.ustc.edu.cn"
+    "source_url": "mirrors.ustc.edu.cn",
+    "security_source_url": "mirrors.ustc.edu.cn/debian-security"
   }
   push: {
     "headless": "true",
     "iso_url": "http://mirrors.kernel.org/debian-cd/8.2.0/amd64/iso-cd/debian-8.2.0-amd64-netinst.iso",
     "iso_checksum": "762eb3dfc22f85faf659001ebf270b4f",
     "iso_checksum_type": "md5",
-    "source_url": "ftp.hosteurope.de/mirror/ftp.debian.org"
+    "source_url": "ftp.debian.org",
+    "security_source_url": "security.debian.org/debian-security"
   }
 
 remote-shell:

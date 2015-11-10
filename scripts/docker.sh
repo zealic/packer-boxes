@@ -17,7 +17,7 @@ elif [[ $BUILD_GUEST_OS =~ debian ]]; then
   echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
   apt-get install -y apt-transport-https
   sleep 3; apt-get update -qq
-  apt-get install -y -qq docker-engine=${DOCKER_VERSION}\*
+  apt-get install -y -qq --force-yes docker-engine=${DOCKER_VERSION}\*
 fi
 
 

@@ -123,7 +123,7 @@ class PackerTemplate
         "only": ["vagrant"]
       })
       template[:push] = {
-        "exclude": [".*", "*.box", "output-*", "packer_cache", "*.json"]
+        "exclude": [".*", "*.box", "output-*", "packer_*", "*.json"]
       }
     end
     template[:"post-processors"] = processors
@@ -146,7 +146,7 @@ class PackerTemplate
   end
 
   def push()
-    generate(push: true)
+    generate()
 
     Dir.chdir(get_basedir()) do
       FileUtils.rm_rf(Dir.glob("output-#{@name}"))
@@ -172,6 +172,7 @@ class PackerTemplate
     builder = {
       'name': format,
       'vm_name': "{{user `template_name`}}",
+      'headless': "{{user `headless`}}",
       'iso_url': "{{user `iso_url`}}",
       'iso_checksum': "{{user `iso_checksum`}}",
       'iso_checksum_type': "{{user `iso_checksum_type`}}",
@@ -179,7 +180,7 @@ class PackerTemplate
       'ssh_username': "{{user `ssh_username`}}",
       'ssh_password': "{{user `ssh_password`}}",
       'ssh_wait_timeout': "60m",
-      'boot_wait': "10s",
+      'boot_wait': "5s",
       'shutdown_command': "sudo -S /sbin/halt -h -p",
       'disk_size': 10240
     }
@@ -192,7 +193,7 @@ class PackerTemplate
       builder['boot_command'] = [
         "<esc><wait>",
         "install <wait>",
-        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg <wait>",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg <wait>",
         "debian-installer=en_US <wait>",
         "auto <wait>",
         "locale=en_US <wait>",
@@ -204,6 +205,7 @@ class PackerTemplate
         "debconf/frontend=noninteractive <wait>",
         "console-setup/ask_detect=false <wait>",
         "console-keymaps-at/keymap=us <wait>",
+        "grub-installer/bootdev=/dev/vda <wait>",
         "<enter><wait>"
       ]
     end
@@ -234,7 +236,7 @@ class PackerTemplate
         ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpu_count`}}"]
       ]
       # DNS Speed UP
-      if @task == 'push' then
+      if @task != 'push' then
         builder['vboxmanage'].push(["modifyvm", "{{.Name}}", "--natdnshostresolver1", "on"])
         builder['vboxmanage'].push(["modifyvm", "{{.Name}}", "--natdnsproxy1", "on"])
       end

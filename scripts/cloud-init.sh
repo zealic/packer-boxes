@@ -12,6 +12,7 @@ fi
 
 systemctl enable cloud-init
 
+mkdir -p /etc/cloud
 cat > /etc/cloud/cloud.cfg <<"EOF"
 users:
   - default
