@@ -1,4 +1,9 @@
 #!/bin/bash
+if [[ ! $BUILD_FORMAT =~ vagrant ]]; then
+  echo "Build format is not vagrant format."
+  exit 0
+fi
+
 if [[ $PACKER_BUILDER_TYPE =~ virtualbox ]]; then
   if [[ $BUILD_FORMAT =~ vagrant ]]; then
     mount -o loop /home/vagrant/VBoxGuestAdditions.iso /mnt

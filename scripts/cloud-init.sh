@@ -10,8 +10,6 @@ elif [[ $BUILD_GUEST_OS =~ debian ]]; then
   apt-get install -y -qq ${PACKAGES[@]}
 fi
 
-systemctl enable cloud-init
-
 mkdir -p /etc/cloud
 cat > /etc/cloud/cloud.cfg <<"EOF"
 users:
@@ -91,3 +89,7 @@ system_info:
       failsafe:
         primary: http://ftp.debian.org/debian
 EOF
+
+if [[ $BUILD_RUNTIME =~ cloud ]]; then
+  systemctl enable cloud-init
+fi

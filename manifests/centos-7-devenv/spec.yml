@@ -1,4 +1,4 @@
-version: 2.0.0
+version: 2.1.0
 atlas_user: "zealic"
 
 variables:
@@ -18,16 +18,26 @@ variables:
   }
 
 remote-shell:
+  # System Base
   - [
       "scripts/packages.sh",
       "scripts/docker.sh",
       "scripts/vagrant.sh"
     ]
+  # Languages
   - [
       "scripts/lang/golang.sh",
       "scripts/lang/nodejs.sh",
       "scripts/lang/python.sh",
       "scripts/lang/ruby.sh"
     ]
+  # Docker images
+  - [
+      "scripts/docker/general.sh"
+    ]
+  # Cloud
+  - "scripts/cloud-init.sh"
+  # Virtual Macine required
   - "scripts/vm-tools.sh"
+  # Cleanup
   - "scripts/cleanup.sh"

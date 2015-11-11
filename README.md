@@ -38,6 +38,15 @@ rake build:vagrant region=cn
 * qcow2 (qemu provider only)
 * vagrant
 
+### Availables runtimes
+* local
+* cloud
+* vagrant
+
+### Availables regions
+* global
+* cn
+
 
 ## Boxes
 ### CentOS 7

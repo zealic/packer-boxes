@@ -14,15 +14,18 @@ class PackerTemplate
   def initialize(opts)
     defaults = CONFIG['defaults']
     @build_format = opts[:format]
-    @manifest = normalize_manifest(opts[:manifest] || defaults['manifest'])
+    @manifest = opts[:manifest] || defaults['manifest']
     @provider = opts[:provider] || defaults['provider']
     @region = opts[:region] || defaults['region']
+    @runtime = opts[:runtime] || defaults['runtime']
+    @runtime = @build_format if @build_format == "vagrant"
     @task = opts[:task]
     @file = File.join(get_basedir(), "packer-template.json")
     @build_date = DateTime.now.strftime("%Y%m%d")
     @spec = YAML.load(IO.read("#{MANIFEST_DIR}/#{@manifest}/spec.yml"))
-    FileUtils.mkdir_p(get_basedir())
+    validate()
 
+    FileUtils.mkdir_p(get_basedir())
     # Load packer template
     @packer_template = {
       'variables': {
@@ -32,11 +35,8 @@ class PackerTemplate
         'version':        @spec['version'],
         'template_name':  @manifest,
         'ssh_username':   'root',
-        'ssh_password':   SecureRandom.base64,
-        'build_format':   @build_format,
-        'build_date':     @build_date,
-        'build_provider': @provider
-      },
+        'ssh_password':   SecureRandom.base64
+      }.merge(generate_build_info),
       'builders': []
     }
 
@@ -71,20 +71,13 @@ class PackerTemplate
     # Generate provisioners
     provisioners = []
     shell_env = []
-    env_list = {
-      'BUILD_FORMAT': @build_format,
-      'BUILD_DATE': @build_date,
-      'BUILD_MANIFEST': @manifest,
-      'BUILD_PROVIDER': "{{user `build_provider`}}",
-      'BUILD_GUEST_OS': is_debian ? 'debian' : is_centos ? 'centos': 'other',
-      'BUILD_REGION': @region
-    }
+    env_list = generate_build_info()
 
     if is_debian then
       env_list['DEBIAN_FRONTEND'] = "noninteractive"
     end
     env_list.each do |k, v|
-      shell_env.push("#{k}=#{v}")
+      shell_env.push("#{k.upcase}=#{v}")
     end
     (@spec['remote-shell'] || []).each do |p|
       scripts = p.kind_of?(Array) ? p : [p]
@@ -130,19 +123,25 @@ class PackerTemplate
 
     # Generate template
     IO.binwrite(@file, JSON.pretty_generate(template))
+    var_scope = @packer_template[:variables].each_with_object({}){|(k,v), h| h[k.to_sym] = v}
 
-    # Generate ks template
+    # Generate ks with variables template
     ks_template = IO.read("#{MANIFEST_DIR}/#{@manifest}/ks.cfg")
     Dir.chdir(get_basedir()) do
-      ks_scope = @packer_template[:variables].each_with_object({}){|(k,v), h| h[k.to_sym] = v}
-      # kickstart file not support CRLF newline
-      IO.binwrite("ks.cfg", ks_template % ks_scope)
+      IO.binwrite("ks.cfg", ks_template % var_scope)
     end
 
-    # Copy scripts
+    # Generate scripts
     target_dir = get_basedir()
+    ## Generate directories strutures
     FileUtils.rm_rf(Dir.glob(target_dir + "/scripts"))
     FileUtils.cp_r("scripts", target_dir)
+    ## Generate scripts with variables
+    raw_files = Dir.glob("scripts/**/*.sh")
+    raw_files.each do |raw_file|
+      raw_content = IO.read(raw_file)
+      IO.binwrite("#{target_dir}/#{raw_file}", raw_content % var_scope)
+    end
   end
 
   def push()
@@ -154,6 +153,19 @@ class PackerTemplate
       atlas_name = "#{@spec['atlas_user']}/#{@manifest}"
       exec 'packer', 'push', "-name=#{atlas_name}", filename
     end
+  end
+
+  private
+  def generate_build_info()
+    return {
+      'build_format': @build_format,
+      'build_date': @build_date,
+      'build_manifest': @manifest,
+      'build_provider': @provider,
+      'build_runtime': @runtime,
+      'build_guest_os': is_debian ? 'debian' : is_centos ? 'centos': 'other',
+      'build_region': @region
+    }
   end
 
   private
@@ -269,12 +281,16 @@ class PackerTemplate
   end
 
   private
-  def normalize_manifest(manifest)
+  def validate()
     manifests = Dir["#{MANIFEST_DIR}/*/"].map { |a| File.basename(a) }
-    unless manifests.include?(manifest) then
-      fail("Invalid manifest '#{manifest}', must be in #{manifests}.") 
+    unless manifests.include?(@manifest) then
+      fail("Invalid manifest '#{@manifest}', must be in #{manifests}.") 
     end
-    return manifest
+
+    runtimes = ["local", "cloud", "vagrant"]
+    unless runtimes.include?(@runtime) then
+      fail("Invalid runtime '#{@runtime}', must be in #{runtimes}.") 
+    end
   end
 
   private
