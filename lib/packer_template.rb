@@ -8,7 +8,7 @@ FORMATS          = ["ova", "ovf", "qcow2", "vagrant"]
 MANIFEST_DIR     = "manifests"
 
 class PackerTemplate
-  attr_reader :build_format, :manifest, :provider, :region, :task
+  attr_reader :build_format, :manifest, :provider, :task
   attr_reader :file, :build_date, :spec, :packer_template
 
   def initialize(opts)
@@ -16,7 +16,6 @@ class PackerTemplate
     @build_format = opts[:format]
     @manifest = opts[:manifest] || defaults['manifest']
     @provider = opts[:provider] || defaults['provider']
-    @region = opts[:region] || defaults['region']
     @runtime = opts[:runtime] || defaults['runtime']
     @runtime = @build_format if @build_format == "vagrant"
     @task = opts[:task]
@@ -163,8 +162,7 @@ class PackerTemplate
       'build_manifest': @manifest,
       'build_provider': @provider,
       'build_runtime': @runtime,
-      'build_guest_os': is_debian ? 'debian' : is_centos ? 'centos': 'other',
-      'build_region': @region
+      'build_guest_os': is_debian ? 'debian' : is_centos ? 'centos': 'other'
     }
   end
 

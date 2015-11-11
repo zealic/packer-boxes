@@ -11,7 +11,7 @@ enabled=1
 gpgcheck=1
 gpgkey=https://yum.dockerproject.org/gpg
 EOF
-  yum install docker-engine-${DOCKER_VERSION}
+  yum install -y docker-engine-${DOCKER_VERSION}
 elif [[ $BUILD_GUEST_OS =~ debian ]]; then
   apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
   echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list

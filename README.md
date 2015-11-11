@@ -23,8 +23,8 @@ To build vagrant box, you need:
 rake build:vagrant
 # Build ova with manifest
 rake build:ova manifest=debian-8-devenv
-# Build vagrant with region (China region)
-rake build:vagrant region=cn
+# Build vagrant with runtime
+rake build:vagrant runtime=vagrant
 ```
 
 ### Availables tasks
@@ -42,10 +42,6 @@ rake build:vagrant region=cn
 * local
 * cloud
 * vagrant
-
-### Availables regions
-* global
-* cn
 
 
 ## Boxes
