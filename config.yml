@@ -3,3 +3,4 @@ defaults:
   manifest    : "debian-8-devenv"
   provider    : "virtualbox"
   runtime     : "local"
+  region      : "global"

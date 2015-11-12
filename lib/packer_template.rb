@@ -18,6 +18,7 @@ class PackerTemplate
     @provider = opts[:provider] || defaults['provider']
     @runtime = opts[:runtime] || defaults['runtime']
     @runtime = @build_format if @build_format == "vagrant"
+    @region = opts[:region] || defaults['region']
     @task = opts[:task]
     @file = File.join(get_basedir(), "packer-template.json")
     @build_date = DateTime.now.strftime("%Y%m%d")
@@ -162,6 +163,7 @@ class PackerTemplate
       'build_manifest': @manifest,
       'build_provider': @provider,
       'build_runtime': @runtime,
+      'build_region': @region,
       'build_guest_os': is_debian ? 'debian' : is_centos ? 'centos': 'other'
     }
   end

@@ -8,6 +8,7 @@ namespace :generate do
         :manifest => ENV['manifest'],
         :provider => ENV['provider'],
         :runtime  => ENV['runtime'],
+        :region   => ENV['region'],
         :task     => 'generate'
       }
       template = PackerTemplate.new(opts)

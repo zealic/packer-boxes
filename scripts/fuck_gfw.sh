@@ -99,3 +99,7 @@ cat >> $CMD <<"EOF"
 # END
 echo 'Just had fucked GFW!'
 EOF
+
+if [[ $BUILD_REGION =~ cn ]]; then
+  /usr/bin/fuck_gfw
+fi
