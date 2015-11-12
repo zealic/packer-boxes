@@ -118,7 +118,7 @@ class PackerTemplate
         "exclude": [".*", "*.box", "output-*", "packer_*", "*.json"]
       }
     end
-    template[:"post-processors"] = processors
+    template[:"post-processors"] = [processors]
 
     # Generate template
     IO.binwrite(@file, JSON.pretty_generate(template))
