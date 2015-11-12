@@ -7,7 +7,6 @@ namespace :push do
         :format   => format,
         :manifest => ENV['manifest'],
         :provider => ENV['provider'],
-        :region   => ENV['region'],
         :runtime  => ENV['runtime'],
         :task     => 'push'
       }
