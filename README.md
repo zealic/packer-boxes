@@ -5,7 +5,7 @@ Provided vagrant boxes for develop, testing and deploy.
 ## Usage
 1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Install [Vagrant](https://www.vagrantup.com)
-3. Get box : `vagrant box add zealic/centos-7-devenv`
+3. Get box : `vagrant box add zealic/debian-8-devenv`
 4. Install plugin : `vagrant plugin install vagrant-vbguest`
 5. Boot vagrant environment : `vagrant init && vagrant up`
 

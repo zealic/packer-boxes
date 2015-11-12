@@ -90,6 +90,7 @@ system_info:
         primary: http://ftp.debian.org/debian
 EOF
 
+systemctl disable cloud-init
 if [[ $BUILD_RUNTIME =~ cloud ]]; then
   systemctl enable cloud-init
 fi
