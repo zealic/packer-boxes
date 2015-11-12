@@ -88,9 +88,10 @@ cat >> $CMD <<"EOF"
 # Python
 cat > /etc/profile.d/100_pip-mirror.sh <<"CONF"
 mkdir -p ~/.pip
-cat > ~/.pip/pip.conf <<"CONF"
+cat > ~/.pip/pip.conf <<"PIP_CONF"
 [global]
 index-url = https://pypi.mirrors.ustc.edu.cn/simple
+PIP_CONF
 CONF
 EOF
 
