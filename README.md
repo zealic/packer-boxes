@@ -5,9 +5,9 @@ Provided vagrant boxes for develop, testing and deploy.
 ## Usage
 1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Install [Vagrant](https://www.vagrantup.com)
-3. Use `vagrant box add zealic/centos-7-devenv` to initialize Vagrantfile
-4. Use `vagrant plugin install vagrant-vbguest` install plugin
-5. Use `vagrant up` to boot vagrant environment
+3. Get box : `vagrant box add zealic/centos-7-devenv`
+4. Install plugin : `vagrant plugin install vagrant-vbguest`
+5. Boot vagrant environment : `vagrant init && vagrant up`
 
 For more information, visit [Vagrant Documentation](https://docs.vagrantup.com/v2/)
 
@@ -23,8 +23,8 @@ To build vagrant box, you need:
 rake build:vagrant
 # Build ova with manifest
 rake build:ova manifest=debian-8-devenv
-# Build vagrant with runtime
-rake build:vagrant runtime=vagrant
+# Build ovf with runtime (for Cloud environment)
+rake build:ovf runtime=cloud
 ```
 
 ### Availables tasks
@@ -39,9 +39,9 @@ rake build:vagrant runtime=vagrant
 * vagrant
 
 ### Availables runtimes
-* local
-* cloud
-* vagrant
+* local (For local virtual machine)
+* cloud (For cloud image, like AWS AMI or OpenStack)
+* vagrant (For vagrant box)
 
 
 ## Boxes
