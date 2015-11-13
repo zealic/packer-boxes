@@ -8,7 +8,9 @@ variables:
     "iso_checksum": "762eb3dfc22f85faf659001ebf270b4f",
     "iso_checksum_type": "md5",
     "mirror_host": "mirrors.ustc.edu.cn",
-    "security_host": "mirrors.ustc.edu.cn"
+    "mirror_host.cn": "mirrors.ustc.edu.cn",
+    "security_host": "mirrors.ustc.edu.cn",
+    "security_host.cn": "mirrors.ustc.edu.cn"
   }
   push: {
     "headless": "true",
@@ -16,7 +18,9 @@ variables:
     "iso_checksum": "762eb3dfc22f85faf659001ebf270b4f",
     "iso_checksum_type": "md5",
     "mirror_host": "mirror.hmc.edu",
-    "security_host": "security.debian.org"
+    "mirror_host.cn": "mirrors.ustc.edu.cn",
+    "security_host": "security.debian.org",
+    "security_host.cn": "mirrors.ustc.edu.cn"
   }
 
 remote-shell:

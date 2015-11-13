@@ -10,25 +10,25 @@ if [[ $BUILD_GUEST_OS =~ centos ]]; then
 cat > /etc/yum.repos.d/CentOS-Base.repo <<"CONF"
 [base]
 name=CentOS-$releasever - Base
-baseurl=https://%{mirror_host}/centos/$releasever/os/$basearch/
+baseurl=https://%{mirror_host.cn}/centos/$releasever/os/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 [updates]
 name=CentOS-$releasever - Updates
-baseurl=https://%{mirror_host}/centos/$releasever/updates/$basearch/
+baseurl=https://%{mirror_host.cn}/centos/$releasever/updates/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 [extras]
 name=CentOS-$releasever - Extras
-baseurl=https://%{mirror_host}/centos/$releasever/extras/$basearch/
+baseurl=https://%{mirror_host.cn}/centos/$releasever/extras/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 [centosplus]
 name=CentOS-$releasever - Plus
-baseurl=https://%{mirror_host}/centos/$releasever/centosplus/$basearch/
+baseurl=https://%{mirror_host.cn}/centos/$releasever/centosplus/$basearch/
 gpgcheck=1
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
@@ -38,7 +38,7 @@ CONF
 cat > /etc/yum.repos.d/epel.repo <<"CONF"
 [epel]
 name=Extra Packages for Enterprise Linux 7 - $basearch
-baseurl=https://%{mirror_host}/epel/7/$basearch
+baseurl=https://%{mirror_host.cn}/epel/7/$basearch
 failovermethod=priority
 enabled=1
 gpgcheck=1
@@ -46,7 +46,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 
 [epel-debuginfo]
 name=Extra Packages for Enterprise Linux 7 - $basearch - Debug
-baseurl=https://%{mirror_host}/epel/7/$basearch/debug
+baseurl=https://%{mirror_host.cn}/epel/7/$basearch/debug
 failovermethod=priority
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
@@ -54,7 +54,7 @@ gpgcheck=1
 
 [epel-source]
 name=Extra Packages for Enterprise Linux 7 - $basearch - Source
-baseurl=https://%{mirror_host}/epel/7/SRPMS
+baseurl=https://%{mirror_host.cn}/epel/7/SRPMS
 failovermethod=priority
 enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
@@ -65,13 +65,13 @@ EOF
 elif [[ $BUILD_GUEST_OS =~ debian ]]; then
   cat >> $CMD <<"EOF"
 # yum conf
-cat > /etc/apt/source.list <<"CONF"
-deb https://%{mirror_host}/debian jessie main
-deb-src https://%{mirror_host}/debian jessie main
-deb https://%{mirror_host}/debian-security jessie/updates main
-deb-src https://%{mirror_host}/debian-security jessie/updates main
-deb https://%{mirror_host}/debian jessie-updates main
-deb-src https://%{mirror_host}/debian jessie-updates main
+cat > /etc/apt/sources.list <<"CONF"
+deb https://%{mirror_host.cn}/debian jessie main
+deb-src https://%{mirror_host.cn}/debian jessie main
+deb https://%{security_host.cn}/debian-security jessie/updates main
+deb-src https://%{security_host.cn}/debian-security jessie/updates main
+deb https://%{mirror_host.cn}/debian jessie-updates main
+deb-src https://%{mirror_host.cn}/debian jessie-updates main
 CONF
 EOF
 fi
@@ -90,7 +90,7 @@ cat > /etc/profile.d/100_pip-mirror.sh <<"CONF"
 mkdir -p ~/.pip
 cat > ~/.pip/pip.conf <<"PIP_CONF"
 [global]
-index-url = https://pypi.mirrors.ustc.edu.cn/simple
+index-url = https://pypi.%{mirror_host.cn}/simple
 PIP_CONF
 CONF
 EOF
