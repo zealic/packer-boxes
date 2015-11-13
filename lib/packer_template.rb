@@ -1,4 +1,5 @@
 require 'securerandom'
+require 'fileutils'
 
 ###########################################################
 # Definitions
@@ -95,6 +96,7 @@ class PackerTemplate
     if @build_format == "vagrant" then
       processors.push({
         "type": "vagrant",
+        "vagrantfile_template": "Vagrantfile.template",
         "keep_input_artifact": false,
         "only": ["vagrant"]
       })
@@ -122,25 +124,30 @@ class PackerTemplate
     template[:"post-processors"] = [processors]
 
     # Generate template
-    IO.binwrite(@file, JSON.pretty_generate(template))
+    fileMap = {}
+    fileMap[@file] = JSON.pretty_generate(template)
     var_scope = @packer_template[:variables].each_with_object({}){|(k,v), h| h[k.to_sym] = v}
 
-    # Generate ks with variables template
+    # Generate ks
     ks_template = IO.read("#{MANIFEST_DIR}/#{@manifest}/ks.cfg")
-    Dir.chdir(get_basedir()) do
-      IO.binwrite("ks.cfg", ks_template % var_scope)
-    end
+    fileMap[File.join(get_basedir(), "ks.cfg")] = ks_template % var_scope
 
     # Generate scripts
-    target_dir = get_basedir()
-    ## Generate directories strutures
-    FileUtils.rm_rf(Dir.glob(target_dir + "/scripts"))
-    FileUtils.cp_r("scripts", target_dir)
-    ## Generate scripts with variables
     raw_files = Dir.glob("scripts/**/*.sh")
     raw_files.each do |raw_file|
-      raw_content = IO.read(raw_file)
-      IO.binwrite("#{target_dir}/#{raw_file}", raw_content % var_scope)
+      fileMap["#{get_basedir()}/#{raw_file}"] = IO.read(raw_file) % var_scope
+    end
+
+    # Generate Vagrantfile.template
+    fileMap[File.join(get_basedir(), "Vagrantfile.template")] = \
+      IO.read("#{MANIFEST_DIR}/#{@manifest}/Vagrantfile.template") % var_scope
+
+    # Write generated files
+    FileUtils.rm_rf(Dir.glob(get_basedir() + "/scripts"))
+    fileMap.each do |k, v|
+      fileDir = File.dirname(k)
+      FileUtils.mkdir_p(fileDir) unless File.exists?(fileDir)
+      IO.binwrite(k, v)
     end
   end
 

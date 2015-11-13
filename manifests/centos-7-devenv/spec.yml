@@ -20,9 +20,9 @@ variables:
 remote-shell:
   # System Base
   - [
+      "scripts/vagrant.sh",
       "scripts/packages.sh",
-      "scripts/docker.sh",
-      "scripts/vagrant.sh"
+      "scripts/docker.sh"
     ]
   # Languages
   - [
