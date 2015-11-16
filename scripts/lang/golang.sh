@@ -9,8 +9,6 @@ GO_VERSION=1.5.1
 curl -SL -o /tmp/golang.tar.gz https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz
 tar -C /usr/local -xzf /tmp/golang.tar.gz
 
-cat > /etc/profile.d/golang.sh <<"EOF"
-export GOPATH=/usr/local/go
-export GOBIN=$GOPATH/bin
-export PATH=$GOBIN:$PATH
-EOF
+ln -sf /usr/local/go/bin/go /usr/local/bin/go
+ln -sf /usr/local/go/bin/godoc /usr/local/bin/godoc
+ln -sf /usr/local/go/bin/gofmt /usr/local/bin/gofmt
