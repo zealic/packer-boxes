@@ -9,7 +9,7 @@ variables:
     "iso_checksum_type": "md5",
     "mirror_host": "mirrors.ustc.edu.cn",
     "mirror_host.cn": "mirrors.ustc.edu.cn",
-    "security_host": "mirrors.ustc.edu.cn",
+    "security_host": "security.debian.org",
     "security_host.cn": "mirrors.ustc.edu.cn"
   }
   push: {
