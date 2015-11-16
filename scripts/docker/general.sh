@@ -2,6 +2,7 @@
 IMAGES=(
   python
   python:2.7
+  redis
   nginx
   mongo
 )
