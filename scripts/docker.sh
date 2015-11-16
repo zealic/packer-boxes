@@ -22,7 +22,7 @@ fi
 
 
 # Add vagrant user to docker group
-if [[ $BUILD_FORMAT =~ vagrant ]]; then
+if [[ $BUILD_RUNTIME =~ vagrant ]]; then
   usermod -a -G docker vagrant
 fi
 

@@ -1,5 +1,6 @@
 require 'securerandom'
 require 'fileutils'
+require 'open3'
 
 ###########################################################
 # Definitions
@@ -11,6 +12,7 @@ MANIFEST_DIR     = "manifests"
 class PackerTemplate
   attr_reader :build_format, :manifest, :provider, :task
   attr_reader :file, :build_date, :spec, :packer_template
+  attr_reader :atlas_name
 
   def initialize(opts)
     defaults = CONFIG['defaults']
@@ -18,13 +20,18 @@ class PackerTemplate
     @manifest = opts[:manifest] || defaults['manifest']
     @provider = opts[:provider] || defaults['provider']
     @runtime = opts[:runtime] || defaults['runtime']
-    @runtime = @build_format if @build_format == "vagrant"
     @region = opts[:region] || defaults['region']
     @task = opts[:task]
     @file = File.join(get_basedir(), "packer-template.json")
     @build_date = DateTime.now.strftime("%Y%m%d")
     @spec = YAML.load(IO.read("#{MANIFEST_DIR}/#{@manifest}/spec.yml"))
     validate()
+
+    if @task == 'push' and @runtime != 'cloud' then
+      @runtime = 'vagrant'
+    end
+    suffix = (@runtime == 'vagrant' ? '' : "-#{@runtime}")
+    @atlas_name = "#{@spec['atlas_user']}/#{@manifest}#{suffix}"
 
     FileUtils.mkdir_p(get_basedir())
     # Load packer template
@@ -108,12 +115,13 @@ class PackerTemplate
 
       processors.push({
         "type": "atlas",
-        "artifact": "{{user `atlas_user`}}/{{user `template_name`}}",
+        "artifact": @atlas_name,
         "artifact_type": "vagrant.box",
         "metadata": {
             "created_at": "{{timestamp}}",
             "provider": provider,
-            "version": "{{user `version`}}"
+            "version": "{{user `version`}}",
+            "revision": get_revision()
         },
         "only": ["vagrant"]
       })
@@ -157,8 +165,7 @@ class PackerTemplate
     Dir.chdir(get_basedir()) do
       FileUtils.rm_rf(Dir.glob("output-#{@name}"))
       filename = File.basename(@file)
-      atlas_name = "#{@spec['atlas_user']}/#{@manifest}"
-      exec 'packer', 'push', "-name=#{atlas_name}", filename
+      exec 'packer', 'push', "-name=#{@atlas_name}", filename
     end
   end
 
@@ -303,5 +310,13 @@ class PackerTemplate
   private
   def get_basedir()
     return ".target/#{@manifest}"
+  end
+
+  private
+  def get_revision()
+    Open3.popen3("git rev-parse --short=8 HEAD") {|i,o,e,t|
+      out = o.read().strip()
+      out == '' ? '00000000' : out
+    }
   end
 end
