@@ -30,8 +30,7 @@ class PackerTemplate
     if @task == 'push' and @runtime != 'cloud' then
       @runtime = 'vagrant'
     end
-    suffix = (@runtime == 'vagrant' ? '' : "-#{@runtime}")
-    @atlas_name = "#{@spec['atlas_user']}/#{@manifest}#{suffix}"
+    @atlas_name = "#{@spec['atlas_user']}/#{@manifest}"
 
     FileUtils.mkdir_p(get_basedir())
     # Load packer template
@@ -119,7 +118,7 @@ class PackerTemplate
         "artifact_type": "vagrant.box",
         "metadata": {
             "created_at": "{{timestamp}}",
-            "provider": provider,
+            "provider": @runtime == "vagrant" ? provider : @runtime,
             "version": "{{user `version`}}",
             "revision": get_revision()
         },
