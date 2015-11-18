@@ -207,7 +207,7 @@ class PackerTemplate
       'ssh_wait_timeout': "60m",
       'boot_wait': "5s",
       'shutdown_command': "sudo -S /sbin/halt -h -p",
-      'disk_size': 10240
+      'disk_size': 20480
     }
 
     if is_centos then
