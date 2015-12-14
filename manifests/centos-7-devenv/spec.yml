@@ -4,8 +4,8 @@ atlas_user: "zealic"
 variables:
   default: {
     "headless": "false",
-    "iso_url": "https://mirrors.ustc.edu.cn/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso",
-    "iso_checksum": "111379a06402e1e445c6aeee9401d031",
+    "iso_url": "https://mirrors.ustc.edu.cn/centos/7.2.1511/isos/x86_64/CentOS-7-x86_64-NetInstall-1511.iso",
+    "iso_checksum": "99d305fa40ec9e28ef8450c3bcc45f85",
     "iso_checksum_type": "md5",
     "mirror_host": "mirrors.ustc.edu.cn",
     "mirror_host.cn": "mirrors.ustc.edu.cn",
@@ -14,8 +14,8 @@ variables:
   }
   push: {
     "headless": "true",
-    "iso_url": "http://mirrors.kernel.org/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso",
-    "iso_checksum": "111379a06402e1e445c6aeee9401d031",
+    "iso_url": "http://mirrors.kernel.org/centos/7.2.1511/isos/x86_64/CentOS-7-x86_64-NetInstall-1511.iso",
+    "iso_checksum": "99d305fa40ec9e28ef8450c3bcc45f85",
     "iso_checksum_type": "md5",
     "mirror_host": "mirrors.kernel.org",
     "mirror_host.cn": "mirrors.ustc.edu.cn",
