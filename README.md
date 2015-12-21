@@ -1,4 +1,4 @@
-## vagrant-boxes
+## packer-boxes
 Provided vagrant boxes for develop, testing and deploy.
 
 
