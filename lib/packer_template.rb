@@ -135,9 +135,12 @@ class PackerTemplate
     fileMap[@file] = JSON.pretty_generate(template)
     var_scope = @packer_template[:variables].each_with_object({}){|(k,v), h| h[k.to_sym] = v}
 
-    # Generate ks
-    ks_template = IO.read("#{MANIFEST_DIR}/#{@manifest}/ks.cfg")
-    fileMap[File.join(get_basedir(), "ks.cfg")] = ks_template % var_scope
+    # Generate http files
+    http_files = Dir.glob("#{MANIFEST_DIR}/#{@manifest}/http/*")
+    http_files.each do |http_file|
+      name = File.basename(http_file)
+      fileMap["#{get_basedir()}/http/#{name}"] = IO.read(http_file) % var_scope
+    end
 
     # Generate scripts
     raw_files = Dir.glob("scripts/**/*.sh")
@@ -201,39 +204,16 @@ class PackerTemplate
       'iso_url': "{{user `iso_url`}}",
       'iso_checksum': "{{user `iso_checksum`}}",
       'iso_checksum_type': "{{user `iso_checksum_type`}}",
-      'http_directory': ".",
+      'http_directory': "http",
       'ssh_username': "{{user `ssh_username`}}",
       'ssh_password': "{{user `ssh_password`}}",
       'ssh_wait_timeout': "60m",
-      'boot_wait': "5s",
+      'boot_wait': "15s",
       'shutdown_command': "sudo -S /sbin/halt -h -p",
       'disk_size': 20480
     }
 
-    if is_centos then
-      builder['boot_command'] = [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
-      ]
-    elsif is_debian then
-      builder['boot_command'] = [
-        "<esc><wait>",
-        "install <wait>",
-        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg <wait>",
-        "debian-installer=en_US <wait>",
-        "auto <wait>",
-        "locale=en_US <wait>",
-        "kbd-chooser/method=us <wait>",
-        "keyboard-configuration/xkb-keymap=us <wait>",
-        "netcfg/get_hostname=localhost <wait>",
-        "netcfg/get_domain=localdomain <wait>",
-        "fb=false <wait>",
-        "debconf/frontend=noninteractive <wait>",
-        "console-setup/ask_detect=false <wait>",
-        "console-keymaps-at/keymap=us <wait>",
-        "grub-installer/bootdev=/dev/vda <wait>",
-        "<enter><wait>"
-      ]
-    end
+    builder['boot_command'] = @spec['boot_command']
 
     provider = @provider
     # Formats
@@ -254,7 +234,7 @@ class PackerTemplate
       elsif is_centos then
         builder['guest_os_type'] = "RedHat_64"
       else
-        builder['guest_os_type'] = "Other"
+        builder['guest_os_type'] = "Linux_64"
       end
       builder['vboxmanage'] = [
         ["modifyvm", "{{.Name}}", "--memory", "{{user `memory_size`}}"],

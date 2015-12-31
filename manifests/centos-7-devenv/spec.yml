@@ -1,6 +1,9 @@
 version: 2.1.0
 atlas_user: "zealic"
 
+boot_command:
+  - "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
+
 variables:
   default: {
     "headless": "false",
