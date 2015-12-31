@@ -1,0 +1,58 @@
+version: 2.1.0
+atlas_user: "zealic"
+
+boot_command:
+  - "root<enter><wait>"
+  - "ifconfig eth0 up && udhcpc -i eth0<enter><wait5>"
+  - "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+  - "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/install.sh<enter><wait>"
+  - "source install.sh<enter><wait>"
+
+variables:
+  default: {
+    "headless": "false",
+    "iso_url": "http://wiki.alpinelinux.org/cgi-bin/dl.cgi/v3.3/releases/x86_64/alpine-extended-3.3.0-x86_64.iso",
+    "iso_checksum": "b95420d5eeba3ece5053cf2ed307b427321103e6",
+    "iso_checksum_type": "sha1",
+    "mirror_host": "dl-4.alpinelinux.org",
+    "mirror_host.cn": "dl-4.alpinelinux.org",
+    "security_host": "N/A",
+    "security_host.cn": "N/A"
+  }
+  push: {
+    "headless": "true",
+    "iso_url": "http://wiki.alpinelinux.org/cgi-bin/dl.cgi/v3.3/releases/x86_64/alpine-extended-3.3.0-x86_64.iso",
+    "iso_checksum": "b95420d5eeba3ece5053cf2ed307b427321103e6",
+    "iso_checksum_type": "sha1",
+    "mirror_host": "dl-4.alpinelinux.org",
+    "mirror_host.cn": "dl-4.alpinelinux.org",
+    "security_host": "N/A",
+    "security_host.cn": "N/A"
+  }
+
+remote-shell:
+  # System Base
+  - [
+      "scripts/vagrant.sh",
+      "scripts/packages.sh",
+      "scripts/docker.sh"
+    ]
+  # Languages
+  - [
+      "scripts/lang/golang.sh",
+      "scripts/lang/nodejs.sh",
+      "scripts/lang/python.sh",
+      "scripts/lang/ruby.sh"
+    ]
+  # Docker images
+  - [
+      "scripts/docker/general.sh"
+    ]
+  # Cloud
+  - "scripts/cloud-init.sh"
+  # Virtual Macine required
+  - "scripts/vm-tools.sh"
+  # Fuck GFW
+  - "scripts/fuck_gfw.sh"
+  # Cleanup
+  - "scripts/cleanup.sh"
