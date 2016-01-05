@@ -3,7 +3,7 @@ if [[ ! $BUILD_FORMAT =~ vagrant ]]; then
   echo "Build format is not vagrant format."
   exit 0
 fi
-if [[ ! $BUILD_RUNTIME =~ cloud ]]; then
+if [[ $BUILD_RUNTIME =~ cloud ]]; then
   echo "Cloud runtime not require vagrant."
   exit 0
 fi
