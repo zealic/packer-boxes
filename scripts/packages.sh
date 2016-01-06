@@ -14,6 +14,7 @@ PACKAGES=(
   nmap
   telnet
   tmux
+  unzip
   vim
   wget
 )
