@@ -5,7 +5,7 @@ elif [[ $BUILD_GUEST_OS =~ debian ]]; then
   apt-get install -y -qq git subversion
 fi
 
-GO_VERSION=1.5.1
+GO_VERSION=1.5.3
 curl -SL -o /tmp/golang.tar.gz https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz
 tar -C /usr/local -xzf /tmp/golang.tar.gz
 
