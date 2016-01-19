@@ -93,4 +93,5 @@ EOF
 systemctl disable cloud-init
 if [[ $BUILD_RUNTIME =~ cloud ]]; then
   systemctl enable cloud-init
+  rm /etc/hosts
 fi
