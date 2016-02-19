@@ -1,6 +1,6 @@
 #!/bin/bash
 # Install docker
-DOCKER_VERSION=1.9.1
+DOCKER_VERSION=1.10.1
 
 if [[ $BUILD_GUEST_OS =~ centos ]]; then
   cat >/etc/yum.repos.d/docker.repo <<-EOF
