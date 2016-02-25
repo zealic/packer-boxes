@@ -1,4 +1,4 @@
-version: 2.2.0
+version: 2.3.0
 atlas_user: "zealic"
 
 boot_command:
@@ -59,11 +59,11 @@ remote-shell:
   - [
       "scripts/docker/general.sh"
     ]
-  # Cloud
-  - "scripts/cloud-init.sh"
   # Virtual Macine required
   - "scripts/vm-tools.sh"
   # Fuck GFW
   - "scripts/fuck_gfw.sh"
+  # Cloud
+  - "scripts/cloud-init.sh"
   # Cleanup
   - "scripts/cleanup.sh"
