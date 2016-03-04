@@ -2,7 +2,7 @@
 if [[ $BUILD_GUEST_OS =~ centos ]]; then
   yum install -y git subversion
 elif [[ $BUILD_GUEST_OS =~ debian ]]; then
-  apt-get install -y -qq git subversion
+  apt-get install -y -qq git subversion bison
 fi
 
 GO_VERSION=1.6

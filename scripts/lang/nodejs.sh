@@ -11,5 +11,5 @@ EOF
 chmod +x /etc/profile.d/nvm.sh
 source /etc/profile.d/nvm.sh
 
-nvm install "v$NODE_VERSION.*"
+NVM_NODEJS_ORG_MIRROR=https://mirrors.ustc.edu.cn/node nvm install "v$NODE_VERSION.*"
 npm install -g npm
