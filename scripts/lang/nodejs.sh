@@ -11,5 +11,11 @@ EOF
 chmod +x /etc/profile.d/nvm.sh
 source /etc/profile.d/nvm.sh
 
-NVM_NODEJS_ORG_MIRROR=https://mirrors.ustc.edu.cn/node nvm install "v$NODE_VERSION.*"
+export NVM_NODEJS_ORG_MIRROR=https://nodejs.org/dist
+export npm_config_registry=http://registry.npmjs.org
+if [[ $BUILD_REGION =~ cn ]] || [[ $BUILD_REGION =~ cn ]]; then
+  export NVM_NODEJS_ORG_MIRROR=https://mirrors.ustc.edu.cn/node
+  export npm_config_registry=https://registry.npm.taobao.org
+fi
+nvm install "v$NODE_VERSION.*"
 npm install -g npm
