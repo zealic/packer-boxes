@@ -1,4 +1,9 @@
 #!/bin/bash
+if [[ ! $BUILD_RUNTIME =~ cloud ]]; then
+  echo "Build runtime is not cloud runtime."
+  exit 0
+fi
+
 # Packages
 PACKAGES=(
   cloud-init
@@ -90,14 +95,10 @@ system_info:
         primary: http://ftp.debian.org/debian
 EOF
 
-systemctl disable cloud-init
-if [[ $BUILD_RUNTIME =~ cloud ]]; then
-  CONSOLE="console=ttyS0,115200n8 console=tty0"
-  sed -i -e "s/\(GRUB_CMDLINE_LINUX.*\)\"/\1 $CONSOLE\"/" /etc/default/grub
-  grub2-mkconfig -o /boot/grub2/grub.cfg
+CONSOLE="console=ttyS0,115200n8 console=tty0"
+sed -i -e "s/\(GRUB_CMDLINE_LINUX.*\)\"/\1 $CONSOLE\"/" /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
 
-  dracut --force --add-drivers xen_blkfront /boot/initramfs-$(uname -r).img
+dracut --force --add-drivers xen_blkfront /boot/initramfs-$(uname -r).img
 
-  systemctl enable cloud-init
-  rm /etc/hosts
-fi
+rm /etc/hosts
