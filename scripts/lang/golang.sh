@@ -8,8 +8,9 @@ fi
 GO_VERSION=1.6
 curl -sSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | \
   bash /dev/stdin master /usr/local
-cat > /etc/profile.d/gvm.sh <<"EOF"
+cat > /etc/profile.d/gvm.sh <<EOF
 source /usr/local/gvm/scripts/gvm
+gvm use go$GO_VERSION
 EOF
 chmod +x /etc/profile.d/gvm.sh
 source /usr/local/gvm/scripts/gvm
