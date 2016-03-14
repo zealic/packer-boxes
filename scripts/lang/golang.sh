@@ -10,7 +10,7 @@ curl -sSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-in
   bash /dev/stdin master /usr/local
 cat > /etc/profile.d/gvm.sh <<EOF
 source /usr/local/gvm/scripts/gvm
-gvm use go$GO_VERSION
+gvm use go$GO_VERSION > /dev/null
 EOF
 chmod +x /etc/profile.d/gvm.sh
 source /usr/local/gvm/scripts/gvm
