@@ -24,6 +24,9 @@ RUN bash --login -c "rvm use ruby && gem install --no-document rdoc rake thor js
 # For AWS AMI Builder
 # Use `aws ec2 import-snapshot` to import snapshot
 # Use `ec2iv` to import snapshot (China cn-north-1 region)
+# 1. `export AWS_ACCESS_KEY=<YOUR_ACCESS_KEY> && `export AWS_SECRET_KEY=<YOUR_SECRET_KEY>`
+# 2. `export EC2_URL=ec2.cn-north-1.amazonaws.com.cn`
+# 3. `ec2iv <LOCAL_VMDK_FILE> -f VMDK -z cn-north-1a -b <BUCKET> -o $AWS_ACCESS_KEY -w $AWS_SECRET_KEY`
 RUN curl -SL -o /tmp/ec2-api-tools.zip http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip \
   && mkdir -p /opt && unzip -d /opt /tmp/ec2-api-tools.zip \
   && mv `dirname /opt/ec2-api-tools-*/.` /opt/ec2-api-tools \
