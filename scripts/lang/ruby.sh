@@ -1,8 +1,8 @@
 #!/bin/bash
-if [[ $BUILD_GUEST_OS =~ centos ]]; then
-  yum install -y ruby ruby-devel
-elif [[ $BUILD_GUEST_OS =~ debian ]]; then
-  apt-get install -y -qq ruby ruby-dev
-fi
+curl -sSL https://rvm.io/mpapis.asc | sudo gpg2 --import -
+curl -L https://get.rvm.io | sudo bash -s stable --autolibs=enabled --ruby
+
+source /usr/local/rvm/scripts/rvm
+rvm use ruby
 
 gem install rake bundler

@@ -1,10 +1,21 @@
 #!/bin/bash
-BASE_VERSION=4.x
+NODE_VERSION=4
 
-if [[ $BUILD_GUEST_OS =~ centos ]]; then
-  curl -sL https://rpm.nodesource.com/setup_$BASE_VERSION | bash -
-  yum install -y nodejs
-elif [[ $BUILD_GUEST_OS =~ debian ]]; then
-  curl -sL https://deb.nodesource.com/setup_$BASE_VERSION | bash -
-  apt-get install -y -qq nodejs
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | \
+  NVM_DIR=/usr/local/nvm bash
+
+cat > /etc/profile.d/nvm.sh <<"EOF"
+export NVM_DIR="/usr/local/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+EOF
+chmod +x /etc/profile.d/nvm.sh
+source /etc/profile.d/nvm.sh
+
+export NVM_NODEJS_ORG_MIRROR=https://nodejs.org/dist
+export npm_config_registry=http://registry.npmjs.org
+if [[ $BUILD_REGION =~ cn ]] || [[ $BUILD_REGION =~ cn ]]; then
+  export NVM_NODEJS_ORG_MIRROR=https://mirrors.ustc.edu.cn/node
+  export npm_config_registry=https://registry.npm.taobao.org
 fi
+nvm install "v$NODE_VERSION.*"
+npm install -g npm

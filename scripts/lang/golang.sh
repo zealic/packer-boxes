@@ -2,13 +2,18 @@
 if [[ $BUILD_GUEST_OS =~ centos ]]; then
   yum install -y git subversion
 elif [[ $BUILD_GUEST_OS =~ debian ]]; then
-  apt-get install -y -qq git subversion
+  apt-get install -y -qq git subversion bison
 fi
 
-GO_VERSION=1.5.3
-curl -SL -o /tmp/golang.tar.gz https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz
-tar -C /usr/local -xzf /tmp/golang.tar.gz
+GO_VERSION=1.6
+curl -sSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | \
+  bash /dev/stdin master /usr/local
+cat > /etc/profile.d/gvm.sh <<EOF
+source /usr/local/gvm/scripts/gvm
+gvm use go$GO_VERSION > /dev/null
+EOF
+chmod +x /etc/profile.d/gvm.sh
+source /usr/local/gvm/scripts/gvm
 
-ln -sf /usr/local/go/bin/go /usr/local/bin/go
-ln -sf /usr/local/go/bin/godoc /usr/local/bin/godoc
-ln -sf /usr/local/go/bin/gofmt /usr/local/bin/gofmt
+gvm install go$GO_VERSION -B
+gvm use go$GO_VERSION

@@ -245,7 +245,7 @@ class PackerTemplate
         builder['vboxmanage'].push(["modifyvm", "{{.Name}}", "--natdnshostresolver1", "on"])
         builder['vboxmanage'].push(["modifyvm", "{{.Name}}", "--natdnsproxy1", "on"])
       end
-    elsif provider == "vmware" then
+    elsif provider == "vmware_desktop" or provider == "vmware_fusion" then
       builder['type'] = "vmware-iso"
       if is_debian then
         builder['guest_os_type'] = "debian8-64"
@@ -263,9 +263,13 @@ class PackerTemplate
     elsif provider == "qemu" then
       builder['type'] = "qemu"
       builder['qemuargs'] = [
-        ["-nographic", ""]
+        ["-nographic", ""],
       ]
+      builder['accelerator'] = 'kvm'
+      builder['disk_interface'] = 'scsi'
       builder['headless'] = "true"
+      builder['vnc_port_min'] = 5900
+      builder['vnc_port_max'] = 5900
     else
       fail("Not supported provider '#{provider}'.")
     end

@@ -1,4 +1,4 @@
-version: 2.2.0
+version: 2.3.0
 atlas_user: "zealic"
 
 boot_command:
@@ -22,8 +22,8 @@ boot_command:
 variables:
   default: {
     "headless": "false",
-    "iso_url": "http://mirrors.ustc.edu.cn/debian-cd/8.2.0/amd64/iso-cd/debian-8.2.0-amd64-netinst.iso",
-    "iso_checksum": "762eb3dfc22f85faf659001ebf270b4f",
+    "iso_url": "http://mirrors.ustc.edu.cn/debian-cd/8.3.0/amd64/iso-cd/debian-8.3.0-amd64-netinst.iso",
+    "iso_checksum": "a9b490b4215d1e72e876b031dafa7184",
     "iso_checksum_type": "md5",
     "mirror_host": "mirrors.ustc.edu.cn",
     "mirror_host.cn": "mirrors.ustc.edu.cn",
@@ -32,10 +32,10 @@ variables:
   }
   push: {
     "headless": "true",
-    "iso_url": "http://mirrors.kernel.org/debian-cd/8.2.0/amd64/iso-cd/debian-8.2.0-amd64-netinst.iso",
-    "iso_checksum": "762eb3dfc22f85faf659001ebf270b4f",
+    "iso_url": "http://mirrors.kernel.org/debian-cd/8.3.0/amd64/iso-cd/debian-8.3.0-amd64-netinst.iso",
+    "iso_checksum": "a9b490b4215d1e72e876b031dafa7184",
     "iso_checksum_type": "md5",
-    "mirror_host": "mirror.hmc.edu",
+    "mirror_host": "httpredir.debian.org",
     "mirror_host.cn": "mirrors.ustc.edu.cn",
     "security_host": "security.debian.org",
     "security_host.cn": "mirrors.ustc.edu.cn"
@@ -59,11 +59,11 @@ remote-shell:
   - [
       "scripts/docker/general.sh"
     ]
-  # Cloud
-  - "scripts/cloud-init.sh"
   # Virtual Macine required
   - "scripts/vm-tools.sh"
   # Fuck GFW
   - "scripts/fuck_gfw.sh"
+  # Cloud
+  - "scripts/cloud-init.sh"
   # Cleanup
   - "scripts/cleanup.sh"
