@@ -6,12 +6,14 @@ boot_command:
   - "ifconfig eth0 up && udhcpc -i eth0<enter><wait5>"
   - "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/install.sh<enter><wait>"
   - "source install.sh<enter><wait>"
-
+  - "/etc/init.d/sshd stop<enter><wait>"
+  - "eject -r<enter>"
+  - "reboot<enter>"
 variables:
   default: {
     "headless": "false",
-    "iso_url": "http://wiki.alpinelinux.org/cgi-bin/dl.cgi/v3.3/releases/x86_64/alpine-extended-3.3.1-x86_64.iso",
-    "iso_checksum": "a206b19ad6918b7aa40be554ef026237bcdfe118",
+    "iso_url": "https://mirrors.ustc.edu.cn/alpine/v3.3/releases/x86_64/alpine-3.3.0-x86_64.iso",
+    "iso_checksum": "0f0a46075996ea79353641263c163d499c6f7c19",
     "iso_checksum_type": "sha1",
     "mirror_host": "dl-4.alpinelinux.org",
     "mirror_host.cn": "dl-4.alpinelinux.org",
