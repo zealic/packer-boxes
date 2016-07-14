@@ -1,7 +1,7 @@
 #!/bin/bash
-NODE_VERSION=4
+NODE_VERSION=6
 
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | \
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | \
   NVM_DIR=/usr/local/nvm bash
 
 cat > /etc/profile.d/nvm.sh <<"EOF"
