@@ -1,7 +1,7 @@
 #!/bin/bash
-NODE_VERSION=6
+NODE_VERSION=7
 
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | \
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | \
   NVM_DIR=/usr/local/nvm bash
 
 cat > /etc/profile.d/nvm.sh <<"EOF"
@@ -18,4 +18,4 @@ if [[ $BUILD_REGION =~ cn ]] || [[ $BUILD_REGION =~ cn ]]; then
   export npm_config_registry=https://registry.npm.taobao.org
 fi
 nvm install "v$NODE_VERSION.*"
-npm install -g npm
+npm install -g npm@4

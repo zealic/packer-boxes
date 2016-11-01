@@ -5,7 +5,7 @@ elif [[ $BUILD_GUEST_OS =~ debian ]]; then
   apt-get install -y -qq git subversion bison
 fi
 
-GO_VERSION=1.6.2
+GO_VERSION=1.7.3
 curl -sSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | \
   bash /dev/stdin master /usr/local
 cat > /etc/profile.d/gvm.sh <<EOF
