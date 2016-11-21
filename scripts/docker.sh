@@ -20,6 +20,9 @@ elif [[ $BUILD_GUEST_OS =~ debian ]]; then
   apt-get install -y -qq --force-yes docker-engine=${DOCKER_VERSION}\*
 fi
 
+# docker-compose
+pip install docker-compose
+
 
 # Add vagrant user to docker group
 if [[ $BUILD_RUNTIME =~ vagrant ]]; then
