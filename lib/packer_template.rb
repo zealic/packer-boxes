@@ -218,11 +218,12 @@ class PackerTemplate
     provider = @provider
     # Formats
     if format == "ova" || format == "ovf" then
-      provider = "virtualbox"
-      builder['hard_drive_interface'] = "scsi"
-      builder['guest_additions_mode'] = "disable"
       builder['format'] = format
-      builder['export_opts'] = ["--options", "manifest,nomacs"]
+      if provider == "virtualbox"
+        builder['hard_drive_interface'] = "scsi"
+        builder['guest_additions_mode'] = "disable"
+        builder['export_opts'] = ["--options", "manifest,nomacs"]
+      end
     elsif format == "qcow2" then
       provider = "qemu"
     end
@@ -245,7 +246,7 @@ class PackerTemplate
         builder['vboxmanage'].push(["modifyvm", "{{.Name}}", "--natdnshostresolver1", "on"])
         builder['vboxmanage'].push(["modifyvm", "{{.Name}}", "--natdnsproxy1", "on"])
       end
-    elsif provider == "vmware_desktop" or provider == "vmware_fusion" then
+    elsif provider == "vmware" then
       builder['type'] = "vmware-iso"
       if is_debian then
         builder['guest_os_type'] = "debian8-64"

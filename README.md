@@ -43,6 +43,11 @@ rake build:ovf runtime=cloud
 * cloud (For cloud image, like AWS AMI or OpenStack)
 * vagrant (For vagrant box)
 
+### Availables providers
+* qemu
+* virtualbox
+* vmware
+
 
 ## Boxes
 ### CentOS 7
