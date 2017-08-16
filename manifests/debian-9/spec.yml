@@ -22,8 +22,8 @@ boot_command:
 variables:
   default: {
     "headless": "false",
-    "iso_url": "https://mirrors.tuna.tsinghua.edu.cn/debian-cd/8.6.0/amd64/iso-cd/debian-8.6.0-amd64-netinst.iso",
-    "iso_checksum": "e9f61bf327db6d8f7cee05a99f2353cc",
+    "iso_url": "https://mirrors.tuna.tsinghua.edu.cn/debian-cd/9.1.0/amd64/iso-cd/debian-9.1.0-amd64-netinst.iso",
+    "iso_checksum": "ddd8f6542dae8baf410e90b9ae0fe986",
     "iso_checksum_type": "md5",
     "mirror_host": "mirrors.tuna.tsinghua.edu.cn",
     "mirror_host.cn": "mirrors.tuna.tsinghua.edu.cn",
@@ -32,8 +32,8 @@ variables:
   }
   push: {
     "headless": "true",
-    "iso_url": "http://mirrors.kernel.org/debian-cd/8.6.0/amd64/iso-cd/debian-8.6.0-amd64-netinst.iso",
-    "iso_checksum": "e9f61bf327db6d8f7cee05a99f2353cc",
+    "iso_url": "http://mirrors.kernel.org/debian-cd/9.1.0/amd64/iso-cd/debian-9.1.0-amd64-netinst.iso",
+    "iso_checksum": "ddd8f6542dae8baf410e90b9ae0fe986",
     "iso_checksum_type": "md5",
     "mirror_host": "httpredir.debian.org",
     "mirror_host.cn": "mirrors.ustc.edu.cn",
@@ -47,17 +47,6 @@ remote-shell:
       "scripts/vagrant.sh",
       "scripts/packages.sh",
       "scripts/docker.sh"
-    ]
-  # Languages
-  - [
-      "scripts/lang/golang.sh",
-      "scripts/lang/nodejs.sh",
-      "scripts/lang/python.sh",
-      "scripts/lang/ruby.sh"
-    ]
-  # Docker images
-  - [
-      "scripts/docker/general.sh"
     ]
   # Virtual Macine required
   - "scripts/vm-tools.sh"
