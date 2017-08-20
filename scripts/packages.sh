@@ -9,9 +9,8 @@ EOF
 PACKAGES=(
   ca-certificates
   build-essential
-  axel
   curl
-  nmap
+  tcpdump
   telnet
   tmux
   unzip
