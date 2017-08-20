@@ -16,6 +16,7 @@ PACKAGES=(
   unzip
   vim
   wget
+  nfs-common
 )
 
 if [[ $BUILD_GUEST_OS =~ centos ]]; then
