@@ -1,3 +1,6 @@
+## PROJECT HAS DEPARTED
+MOVE TO: [zealic/image-builder](https://github.com/zealic/image-builder)
+
 ## packer-boxes
 Provided vagrant boxes for develop, testing and deploy.
 
